@@ -12,10 +12,30 @@ def find_column(input, token):
     return (token.lexpos - line_start) + 1
 
 reserved = {
-   'if' : 'IF',
-   'then' : 'THEN',
-   'else' : 'ELSE',
-   'while' : 'WHILE'
+    'if' : 'IF',
+    'then' : 'THEN',
+    'else' : 'ELSE',
+    'while' : 'WHILE',
+    'for': 'FOR',
+    'thing': 'THING',
+    'of': 'OF',
+    'to': 'TO',
+    'cast': 'CAST',
+    'and': 'AND',
+    'is': 'IS',
+    'type': 'TYPE',
+    'or': 'OR',
+    'not': 'NOT',
+    'switch': 'SWITCH',
+    'break': 'BREAK',
+    'continue': 'CONTINUE',
+    'return': 'RETURN',
+    'cpy': 'CPY',
+    'mem': 'MEM',
+    'keep': 'KEEP',
+    'toss': 'TOSS',
+    'import': 'IMPORT',
+    'from': 'FORM'
 }
 
 # List of token names.   This is always required
@@ -42,7 +62,10 @@ tokens = [
     'LT',
     'LTE',
     'GT',
-    'GTE'
+    'GTE',
+    'EXCLAM',
+    'PIPE',
+    'DOUBLE_PIPE'
 ]  + list(reserved.values())
 
 # Regular expression rules for simple tokens
@@ -65,6 +88,9 @@ t_LT = r'<'
 t_GTE = r'>='
 t_GT = '>'
 t_ASSIGN = r'='
+t_EXCLAM = r'!'
+T_DOUBLE_PIPE = r'\|\|'
+T_PIPE = r'\|'
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -130,16 +156,9 @@ lexer = lex.lex()
 
 # Test it out
 data = '''
-x: string = "mulit
-line
-string";
-y: char = 'c';
-# a comment
-/* a 
-multi-line
-comment
-*/
-x >= 5
+x: Binary = mem(1024)
+keep x
+toss x
 '''
 # input('Write a test program: ')
 

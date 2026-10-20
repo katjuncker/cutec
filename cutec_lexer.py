@@ -9,6 +9,8 @@ def find_column(input, token):
     return (token.lexpos - line_start) + 1
 
 class CuteLexer(object):
+    lexer: lex.Lexer | None = None
+
     reserved = {
         'if' : 'IF',
         'then' : 'THEN',
@@ -16,6 +18,7 @@ class CuteLexer(object):
         'while' : 'WHILE',
         'for': 'FOR',
         'thing': 'THING',
+        'action': 'ACTION',
         'of': 'OF',
         'to': 'TO',
         'cast': 'CAST',
@@ -38,7 +41,6 @@ class CuteLexer(object):
 
     # List of token names.   This is always required
     tokens = [
-        'NUMBER',
         'PLUS',
         'MINUS',
         'TIMES',
@@ -54,6 +56,7 @@ class CuteLexer(object):
         'ASSIGN',
         'COLON',
         'SEMICOLON',
+        'NUMBER',
         'ID',
         'STRING',
         'CHAR',
@@ -97,8 +100,8 @@ class CuteLexer(object):
 
     # A regular expression rule with some action code
     def t_NUMBER(self, t):
-        r'\d+'
-        t.value = int(t.value)
+        r'\d+(\.\d+)?'
+        t.value = float(t.value)
         return t
 
     def t_MULTILINE_COMMENT(self, t):

@@ -3,6 +3,7 @@ import ply.yacc as yacc
 from cutec_ast.action_node import ActionNode
 from cutec_ast.assign_node import AssignNode
 from cutec_ast.bin_op import BinOp
+from cutec_ast.call_node import CallNode
 from cutec_ast.frame_node import FrameNode
 from cutec_ast.scalar_node import ScalarNode
 from cutec_lexer import CuteLexer
@@ -15,6 +16,7 @@ precedence = (
     ('right', 'ARROW'),             # Lowest: allows the lambda body to stretch as far as possible
     ('left', 'PLUS', 'MINUS'),    # Medium: standard math addition/subtraction
     ('left', 'TIMES', 'DIVIDE'),  # High: multiplication/division bind tighter
+    ('left', 'LPAREN')
 )
 
 def p_cutec(p):
@@ -88,6 +90,23 @@ def p_factor_action_lambda(p):
 def p_factor_assign(p):
     'factor : ID ASSIGN expression'
     p[0] = AssignNode(p[1], p[3])
+
+def p_factor_call_empty(p):
+    'factor : expression LPAREN RPAREN'
+    p[0] = CallNode(p[1], p[3])
+
+def p_factor_call_list(p):
+    'factor : expression LPAREN argument_list RPAREN'
+    p[0] = CallNode(p[1], p[3])
+
+def p_argument_list(p):
+    'argument_list : argument_list COMMA expression'
+    p[0] = p[1] + [p[3]]
+
+def p_argument_list_expression(p):
+    'argument_list : expression'
+    p[0] = [p[1]]
+
 
 # Error rule for syntax errors
 def p_error(p):

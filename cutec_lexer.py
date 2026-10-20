@@ -52,6 +52,7 @@ class CuteLexer(object):
         'LBRACKET',
         'RBRACKET',
         'DOT',
+        'COMMA',
         'ARROW',
         'ASSIGN',
         'COLON',
@@ -84,6 +85,7 @@ class CuteLexer(object):
     t_LPAREN  = r'\('
     t_RPAREN  = r'\)'
     t_DOT = r'\.'
+    t_COMMA = r','
     t_LTE = r'<='
     t_LT = r'<'
     t_GTE = r'>='

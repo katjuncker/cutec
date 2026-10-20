@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'rightASSIGNrightARROWleftPLUSMINUSleftTIMESDIVIDEACTION AND ARROW ASSIGN BREAK CAST CHAR COLON CONTINUE CPY DIVIDE DOT DOUBLE_PIPE ELSE EXCLAM FOR FORM GT GTE ID IF IMPORT IS KEEP LBRACE LBRACKET LPAREN LT LTE MEM MINUS NOT NUMBER OF OR PIPE PLUS RBRACE RBRACKET RETURN RPAREN SEMICOLON STRING SWITCH THEN THING TIMES TO TOSS TYPE WHILEcutec : statementsframe : LBRACE statements RBRACEstatements : statements statementstatements : statementstatement : expression SEMICOLONexpression : expression PLUS expressionexpression : expression MINUS expressionexpression : expression TIMES expressionexpression : expression DIVIDE expressionexpression : factorfactor : NUMBERfactor : IDfactor : CHARfactor : STRINGfactor : LPAREN expression RPARENfactor :  ACTION LPAREN RPAREN framefactor :  ACTION LPAREN RPAREN ARROW expressionfactor : ID ASSIGN expression'
+_lr_signature = 'rightASSIGNrightARROWleftPLUSMINUSleftTIMESDIVIDEleftLPARENACTION AND ARROW ASSIGN BREAK CAST CHAR COLON COMMA CONTINUE CPY DIVIDE DOT DOUBLE_PIPE ELSE EXCLAM FOR FORM GT GTE ID IF IMPORT IS KEEP LBRACE LBRACKET LPAREN LT LTE MEM MINUS NOT NUMBER OF OR PIPE PLUS RBRACE RBRACKET RETURN RPAREN SEMICOLON STRING SWITCH THEN THING TIMES TO TOSS TYPE WHILEcutec : statementsframe : LBRACE statements RBRACEstatements : statements statementstatements : statementstatement : expression SEMICOLONexpression : expression PLUS expressionexpression : expression MINUS expressionexpression : expression TIMES expressionexpression : expression DIVIDE expressionexpression : factorfactor : NUMBERfactor : IDfactor : CHARfactor : STRINGfactor : LPAREN expression RPARENfactor :  ACTION LPAREN RPAREN framefactor :  ACTION LPAREN RPAREN ARROW expressionfactor : ID ASSIGN expressionfactor : expression LPAREN RPARENfactor : expression LPAREN argument_list RPARENargument_list : argument_list COMMA expressionargument_list : expression'
     
-_lr_action_items = {'NUMBER':([0,2,3,10,12,13,14,15,16,17,18,29,30,32,],[6,6,-4,6,-3,-5,6,6,6,6,6,6,6,6,]),'ID':([0,2,3,10,12,13,14,15,16,17,18,29,30,32,],[7,7,-4,7,-3,-5,7,7,7,7,7,7,7,7,]),'CHAR':([0,2,3,10,12,13,14,15,16,17,18,29,30,32,],[8,8,-4,8,-3,-5,8,8,8,8,8,8,8,8,]),'STRING':([0,2,3,10,12,13,14,15,16,17,18,29,30,32,],[9,9,-4,9,-3,-5,9,9,9,9,9,9,9,9,]),'LPAREN':([0,2,3,10,11,12,13,14,15,16,17,18,29,30,32,],[10,10,-4,10,20,-3,-5,10,10,10,10,10,10,10,10,]),'ACTION':([0,2,3,10,12,13,14,15,16,17,18,29,30,32,],[11,11,-4,11,-3,-5,11,11,11,11,11,11,11,11,]),'$end':([1,2,3,12,13,],[0,-1,-4,-3,-5,]),'RBRACE':([3,12,13,32,],[-4,-3,-5,33,]),'SEMICOLON':([4,5,6,7,8,9,21,22,23,24,25,26,28,31,33,],[13,-10,-11,-12,-13,-14,-6,-7,-8,-9,-18,-15,-16,-17,-2,]),'PLUS':([4,5,6,7,8,9,19,21,22,23,24,25,26,28,31,33,],[14,-10,-11,-12,-13,-14,14,-6,-7,-8,-9,14,-15,-16,14,-2,]),'MINUS':([4,5,6,7,8,9,19,21,22,23,24,25,26,28,31,33,],[15,-10,-11,-12,-13,-14,15,-6,-7,-8,-9,15,-15,-16,15,-2,]),'TIMES':([4,5,6,7,8,9,19,21,22,23,24,25,26,28,31,33,],[16,-10,-11,-12,-13,-14,16,16,16,-8,-9,16,-15,-16,16,-2,]),'DIVIDE':([4,5,6,7,8,9,19,21,22,23,24,25,26,28,31,33,],[17,-10,-11,-12,-13,-14,17,17,17,-8,-9,17,-15,-16,17,-2,]),'RPAREN':([5,6,7,8,9,19,20,21,22,23,24,25,26,28,31,33,],[-10,-11,-12,-13,-14,26,27,-6,-7,-8,-9,-18,-15,-16,-17,-2,]),'ASSIGN':([7,],[18,]),'ARROW':([27,],[29,]),'LBRACE':([27,],[30,]),}
+_lr_action_items = {'NUMBER':([0,2,3,10,12,13,14,15,16,17,18,19,33,35,36,39,],[6,6,-4,6,-3,-5,6,6,6,6,6,6,6,6,6,6,]),'ID':([0,2,3,10,12,13,14,15,16,17,18,19,33,35,36,39,],[7,7,-4,7,-3,-5,7,7,7,7,7,7,7,7,7,7,]),'CHAR':([0,2,3,10,12,13,14,15,16,17,18,19,33,35,36,39,],[8,8,-4,8,-3,-5,8,8,8,8,8,8,8,8,8,8,]),'STRING':([0,2,3,10,12,13,14,15,16,17,18,19,33,35,36,39,],[9,9,-4,9,-3,-5,9,9,9,9,9,9,9,9,9,9,]),'LPAREN':([0,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,29,30,32,33,34,35,36,37,38,39,40,],[10,10,-4,18,-10,-11,-12,-13,-14,10,21,-3,-5,10,10,10,10,10,10,18,18,18,18,18,18,-19,18,-15,-20,10,-16,10,10,18,18,10,-2,]),'ACTION':([0,2,3,10,12,13,14,15,16,17,18,19,33,35,36,39,],[11,11,-4,11,-3,-5,11,11,11,11,11,11,11,11,11,11,]),'$end':([1,2,3,12,13,],[0,-1,-4,-3,-5,]),'RBRACE':([3,12,13,39,],[-4,-3,-5,40,]),'SEMICOLON':([4,5,6,7,8,9,22,23,24,25,27,29,30,32,34,38,40,],[13,-10,-11,-12,-13,-14,-6,-7,-8,-9,-19,-18,-15,-20,-16,-17,-2,]),'PLUS':([4,5,6,7,8,9,20,22,23,24,25,26,27,29,30,32,34,37,38,40,],[14,-10,-11,-12,-13,-14,14,-6,-7,-8,-9,14,-19,14,-15,-20,-16,14,14,-2,]),'MINUS':([4,5,6,7,8,9,20,22,23,24,25,26,27,29,30,32,34,37,38,40,],[15,-10,-11,-12,-13,-14,15,-6,-7,-8,-9,15,-19,15,-15,-20,-16,15,15,-2,]),'TIMES':([4,5,6,7,8,9,20,22,23,24,25,26,27,29,30,32,34,37,38,40,],[16,-10,-11,-12,-13,-14,16,16,16,-8,-9,16,-19,16,-15,-20,-16,16,16,-2,]),'DIVIDE':([4,5,6,7,8,9,20,22,23,24,25,26,27,29,30,32,34,37,38,40,],[17,-10,-11,-12,-13,-14,17,17,17,-8,-9,17,-19,17,-15,-20,-16,17,17,-2,]),'RPAREN':([5,6,7,8,9,18,20,21,22,23,24,25,26,27,28,29,30,32,34,37,38,40,],[-10,-11,-12,-13,-14,27,30,31,-6,-7,-8,-9,-22,-19,32,-18,-15,-20,-16,-21,-17,-2,]),'COMMA':([5,6,7,8,9,22,23,24,25,26,27,28,29,30,32,34,37,38,40,],[-10,-11,-12,-13,-14,-6,-7,-8,-9,-22,-19,33,-18,-15,-20,-16,-21,-17,-2,]),'ASSIGN':([7,],[19,]),'ARROW':([31,],[35,]),'LBRACE':([31,],[36,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'cutec':([0,],[1,]),'statements':([0,30,],[2,32,]),'statement':([0,2,30,32,],[3,12,3,12,]),'expression':([0,2,10,14,15,16,17,18,29,30,32,],[4,4,19,21,22,23,24,25,31,4,4,]),'factor':([0,2,10,14,15,16,17,18,29,30,32,],[5,5,5,5,5,5,5,5,5,5,5,]),'frame':([27,],[28,]),}
+_lr_goto_items = {'cutec':([0,],[1,]),'statements':([0,36,],[2,39,]),'statement':([0,2,36,39,],[3,12,3,12,]),'expression':([0,2,10,14,15,16,17,18,19,33,35,36,39,],[4,4,20,22,23,24,25,26,29,37,38,4,4,]),'factor':([0,2,10,14,15,16,17,18,19,33,35,36,39,],[5,5,5,5,5,5,5,5,5,5,5,5,5,]),'argument_list':([18,],[28,]),'frame':([31,],[34,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,22 +27,26 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> cutec","S'",1,None,None,None),
-  ('cutec -> statements','cutec',1,'p_cutec','cutec_parser.py',21),
-  ('frame -> LBRACE statements RBRACE','frame',3,'p_frame','cutec_parser.py',25),
-  ('statements -> statements statement','statements',2,'p_statements_list','cutec_parser.py',29),
-  ('statements -> statement','statements',1,'p_statements_single','cutec_parser.py',33),
-  ('statement -> expression SEMICOLON','statement',2,'p_statement','cutec_parser.py',37),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_plus','cutec_parser.py',41),
-  ('expression -> expression MINUS expression','expression',3,'p_expression_minus','cutec_parser.py',45),
-  ('expression -> expression TIMES expression','expression',3,'p_expression_times','cutec_parser.py',49),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression_divide','cutec_parser.py',53),
-  ('expression -> factor','expression',1,'p_expression_factor','cutec_parser.py',57),
-  ('factor -> NUMBER','factor',1,'p_factor_num','cutec_parser.py',61),
-  ('factor -> ID','factor',1,'p_factor_id','cutec_parser.py',65),
-  ('factor -> CHAR','factor',1,'p_factor_char','cutec_parser.py',69),
-  ('factor -> STRING','factor',1,'p_factor_string','cutec_parser.py',73),
-  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','cutec_parser.py',77),
-  ('factor -> ACTION LPAREN RPAREN frame','factor',4,'p_factor_action','cutec_parser.py',81),
-  ('factor -> ACTION LPAREN RPAREN ARROW expression','factor',5,'p_factor_action_lambda','cutec_parser.py',85),
-  ('factor -> ID ASSIGN expression','factor',3,'p_factor_assign','cutec_parser.py',89),
+  ('cutec -> statements','cutec',1,'p_cutec','cutec_parser.py',23),
+  ('frame -> LBRACE statements RBRACE','frame',3,'p_frame','cutec_parser.py',27),
+  ('statements -> statements statement','statements',2,'p_statements_list','cutec_parser.py',31),
+  ('statements -> statement','statements',1,'p_statements_single','cutec_parser.py',35),
+  ('statement -> expression SEMICOLON','statement',2,'p_statement','cutec_parser.py',39),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_plus','cutec_parser.py',43),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_minus','cutec_parser.py',47),
+  ('expression -> expression TIMES expression','expression',3,'p_expression_times','cutec_parser.py',51),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression_divide','cutec_parser.py',55),
+  ('expression -> factor','expression',1,'p_expression_factor','cutec_parser.py',59),
+  ('factor -> NUMBER','factor',1,'p_factor_num','cutec_parser.py',63),
+  ('factor -> ID','factor',1,'p_factor_id','cutec_parser.py',67),
+  ('factor -> CHAR','factor',1,'p_factor_char','cutec_parser.py',71),
+  ('factor -> STRING','factor',1,'p_factor_string','cutec_parser.py',75),
+  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','cutec_parser.py',79),
+  ('factor -> ACTION LPAREN RPAREN frame','factor',4,'p_factor_action','cutec_parser.py',83),
+  ('factor -> ACTION LPAREN RPAREN ARROW expression','factor',5,'p_factor_action_lambda','cutec_parser.py',87),
+  ('factor -> ID ASSIGN expression','factor',3,'p_factor_assign','cutec_parser.py',91),
+  ('factor -> expression LPAREN RPAREN','factor',3,'p_factor_call_empty','cutec_parser.py',95),
+  ('factor -> expression LPAREN argument_list RPAREN','factor',4,'p_factor_call_list','cutec_parser.py',99),
+  ('argument_list -> argument_list COMMA expression','argument_list',3,'p_argument_list','cutec_parser.py',103),
+  ('argument_list -> expression','argument_list',1,'p_argument_list_expression','cutec_parser.py',107),
 ]

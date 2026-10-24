@@ -12,14 +12,19 @@ class CuteLexer(object):
     lexer: lex.Lexer | None = None
 
     reserved = {
-        'if' : 'IF',
+        'chase' : 'CHASE',
+        'catch' : 'CATCH',
+        'escape' : 'ESCAPE',
         'then' : 'THEN',
         'else' : 'ELSE',
         'while' : 'WHILE',
         'for': 'FOR',
         'thing': 'THING',
+        'cat': 'CAT',
+        'dog': 'DOG',
         'action': 'ACTION',
         'of': 'OF',
+        'in': 'IN',
         'to': 'TO',
         'cast': 'CAST',
         'and': 'AND',
@@ -65,6 +70,8 @@ class CuteLexer(object):
         'LTE',
         'GT',
         'GTE',
+        'EQ',
+        'NEQ',
         'EXCLAM',
         'PIPE',
         'DOUBLE_PIPE'
@@ -89,6 +96,8 @@ class CuteLexer(object):
     t_LTE = r'<='
     t_LT = r'<'
     t_GTE = r'>='
+    T_EQ = r'=='
+    T_NEQ = r'!='
     t_GT = '>'
     t_ASSIGN = r'='
     t_EXCLAM = r'!'

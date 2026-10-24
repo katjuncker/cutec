@@ -4,7 +4,10 @@ from cutec_ast.action_node import ActionNode
 from cutec_ast.assign_node import AssignNode
 from cutec_ast.bin_op import BinOp
 from cutec_ast.call_node import CallNode
+from cutec_ast.catch_node import CatchNode
+from cutec_ast.escape_node import EscapeNode
 from cutec_ast.frame_node import FrameNode
+from cutec_ast.chase_node import ChaseNode
 from cutec_ast.scalar_node import ScalarNode
 from cutec_lexer import CuteLexer
 
@@ -12,20 +15,28 @@ from cutec_lexer import CuteLexer
 tokens = CuteLexer.tokens
 
 precedence = (
+    ('left', 'CHASE'),  # Lowest precedence
+    ('left', 'ESCAPE'),
     ('right', 'ASSIGN'),
     ('right', 'ARROW'),             # Lowest: allows the lambda body to stretch as far as possible
+    ('left', 'EQ', 'NEQ', 'LTE', 'LT', 'GT', 'GTE'),
     ('left', 'PLUS', 'MINUS'),    # Medium: standard math addition/subtraction
     ('left', 'TIMES', 'DIVIDE'),  # High: multiplication/division bind tighter
-    ('left', 'LPAREN')
+    ('left', 'LPAREN'),
+    ('left', 'DOT')
 )
 
 def p_cutec(p):
-    'cutec : statements'
+    'cutec : expression'
     p[0] = p[1]
 
 def p_frame(p):
     'frame : LBRACE statements RBRACE'
-    p[0] = FrameNode(p[1])
+    p[0] = FrameNode(p[2])
+
+def p_frame_expr(p):
+    'frame : ARROW expression'
+    p[0] = FrameNode([p[2]])
 
 def p_statements_list(p):
     'statements : statements statement'
@@ -55,6 +66,34 @@ def p_expression_divide(p):
     'expression : expression DIVIDE expression'
     p[0] = BinOp('/', p[1], p[3])
 
+def p_expression_dot(p):
+    'expression : expression DOT expression'
+    p[0] = BinOp('.', p[1], p[3])
+
+def p_expression_eq(p):
+    'expression : expression EQ expression'
+    p[0] = BinOp('==', p[1], p[3])
+
+def p_expression_neq(p):
+    'expression : expression NEQ expression'
+    p[0] = BinOp('!=', p[1], p[3])
+
+def p_expression_gt(p):
+    'expression : expression GT expression'
+    p[0] = BinOp('>', p[1], p[3])
+
+def p_expression_gte(p):
+    'expression : expression GTE expression'
+    p[0] = BinOp('>=', p[1], p[3])
+
+def p_expression_lt(p):
+    'expression : expression LT expression'
+    p[0] = BinOp('<', p[1], p[3])
+
+def p_expression_lte(p):
+    'expression : expression LTE expression'
+    p[0] = BinOp('<=', p[1], p[3])
+
 def p_expression_factor(p):
     'expression : factor'
     p[0] = p[1]
@@ -80,8 +119,8 @@ def p_factor_expr(p):
     p[0] = p[2]
 
 def p_factor_action(p):
-    'factor :  ACTION LPAREN RPAREN frame'
-    p[0] = ActionNode(p[4])
+    'factor :  ACTION LPAREN RPAREN LBRACE statements RBRACE'
+    p[0] = ActionNode(p[5])
 
 def p_factor_action_lambda(p):
     'factor :  ACTION LPAREN RPAREN ARROW expression'
@@ -107,6 +146,47 @@ def p_argument_list_expression(p):
     'argument_list : expression'
     p[0] = [p[1]]
 
+def p_expression_chase1(p):
+    'expression : chase_with_escape'
+    p[0] = p[1]
+
+def p_expression_chase2(p):
+    'expression : chase_no_escape'
+    p[0] = p[1]
+
+def p_chase_with_escape(p):
+    'chase_with_escape : CHASE catches escape'
+    # Combine catches and the explicit escape clause here
+    p[0] = ChaseNode(p[2], p[3])
+
+def p_chase_no_escape(p):
+    'chase_no_escape : CHASE catches'
+    # Default case when no escape block is specified
+    p[0] = ChaseNode(p[2])
+
+def p_catches_multi(p):
+    'catches : catches catch'
+    p[0] = p[1] + [p[2]]
+
+def p_catches_catch(p):
+    'catches : catch'
+    p[0] = [p[1]]
+
+def p_catch(p):
+    'catch : LPAREN expression RPAREN CATCH frame'
+    p[0] = CatchNode(p[2], p[5])
+
+def p_escape(p):
+    'escape : ESCAPE frame'
+    p[0] = EscapeNode(ScalarNode('number', 0), p[2])
+
+def p_escape_timeout(p):
+    'escape : ESCAPE LPAREN expression RPAREN frame'
+    p[0] = EscapeNode(p[3], p[5])
+
+def p_empty(p):
+    'empty :'
+    p[0] = None  # Or any default value like False or ''
 
 # Error rule for syntax errors
 def p_error(p):
@@ -118,6 +198,23 @@ lexer.build()
 
 # Build the parser
 parser = yacc.yacc()
+
+valid_program = """
+chase
+  (x >= 1000) catch {
+    print("x is too high");
+    reset_counter();
+  }
+
+  (x >= 100) catch {
+    print("x is 100");
+    reset_counter();
+  }
+  
+  escape(1000 * 60) -> print("x never got to 100")
+"""
+
+print(parser.parse(valid_program, lexer=lexer.lexer))
 
 while True:
    try:

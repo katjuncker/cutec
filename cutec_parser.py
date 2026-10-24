@@ -10,6 +10,7 @@ from cutec_ast.frame_node import FrameNode
 from cutec_ast.chase_node import ChaseNode
 from cutec_ast.param_node import ParamNode
 from cutec_ast.scalar_node import ScalarNode
+from cutec_ast.unary_op import UnaryOp
 from cutec_lexer import CuteLexer
 
 # Get the token map from the lexer.  This is required.
@@ -20,6 +21,7 @@ precedence = (
     ('left', 'ESCAPE'),
     ('right', 'ASSIGN'),
     ('right', 'ARROW'),             # Lowest: allows the lambda body to stretch as far as possible
+    ('left', 'OR', 'AND', 'NOT'),
     ('left', 'EQ', 'NEQ', 'LTE', 'LT', 'GT', 'GTE'),
     ('left', 'PLUS', 'MINUS'),    # Medium: standard math addition/subtraction
     ('left', 'TIMES', 'DIVIDE'),  # High: multiplication/division bind tighter
@@ -94,6 +96,18 @@ def p_expression_lt(p):
 def p_expression_lte(p):
     'expression : expression LTE expression'
     p[0] = BinOp('<=', p[1], p[3])
+
+def p_expression_and(p):
+    'expression : expression AND expression'
+    p[0] = BinOp('and', p[1], p[3])
+
+def p_expression_or(p):
+    'expression : expression OR expression'
+    p[0] = BinOp('or', p[1], p[3])
+
+def p_expression_not(p):
+    'expression : NOT expression'
+    p[0] = UnaryOp('not', p[2])
 
 def p_expression_factor(p):
     'expression : factor'

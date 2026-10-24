@@ -40,6 +40,7 @@ class CuteLexer(object):
         'mem': 'MEM',
         'keep': 'KEEP',
         'toss': 'TOSS',
+        'oops': 'OOPS',
         'import': 'IMPORT',
         'from': 'FORM'
     }
@@ -136,7 +137,6 @@ class CuteLexer(object):
 
         # PLY Counter: Update lines after processing
         t.lexer.lineno += t.value.count('\n')
-        print(t.value, len(t.value))
         return t
 
     def t_CHAR(self, t):

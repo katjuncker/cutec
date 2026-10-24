@@ -56,43 +56,48 @@ Rule 15    expression -> expression GTE expression
 Rule 16    expression -> expression LT expression
 Rule 17    expression -> expression LTE expression
 Rule 18    expression -> factor
-Rule 19    factor -> NUMBER
-Rule 20    factor -> ID
-Rule 21    factor -> CHAR
-Rule 22    factor -> STRING
-Rule 23    factor -> LPAREN expression RPAREN
-Rule 24    factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE
-Rule 25    factor -> ACTION LPAREN RPAREN ARROW expression
-Rule 26    factor -> ID ASSIGN expression
-Rule 27    factor -> expression LPAREN RPAREN
-Rule 28    factor -> expression LPAREN argument_list RPAREN
-Rule 29    argument_list -> argument_list COMMA expression
-Rule 30    argument_list -> expression
-Rule 31    expression -> chase_with_escape
-Rule 32    expression -> chase_no_escape
-Rule 33    chase_with_escape -> CHASE catches escape
-Rule 34    chase_no_escape -> CHASE catches
-Rule 35    catches -> catches catch
-Rule 36    catches -> catch
-Rule 37    catch -> LPAREN expression RPAREN CATCH frame
-Rule 38    escape -> ESCAPE frame
-Rule 39    escape -> ESCAPE LPAREN expression RPAREN frame
-Rule 40    empty -> <empty>
+Rule 19    factor -> LPAREN expression RPAREN
+Rule 20    factor -> ACTION LPAREN RPAREN frame
+Rule 21    factor -> ACTION LPAREN params RPAREN frame
+Rule 22    factor -> scalar
+Rule 23    scalar -> NUMBER
+Rule 24    scalar -> ID
+Rule 25    scalar -> CHAR
+Rule 26    scalar -> STRING
+Rule 27    params -> params COMMA param
+Rule 28    params -> param
+Rule 29    param -> ID
+Rule 30    param -> ID ASSIGN scalar
+Rule 31    factor -> ID ASSIGN expression
+Rule 32    factor -> expression LPAREN RPAREN
+Rule 33    factor -> expression LPAREN argument_list RPAREN
+Rule 34    argument_list -> argument_list COMMA expression
+Rule 35    argument_list -> expression
+Rule 36    expression -> chase_with_escape
+Rule 37    expression -> chase_no_escape
+Rule 38    chase_with_escape -> CHASE catches escape
+Rule 39    chase_no_escape -> CHASE catches
+Rule 40    catches -> catches catch
+Rule 41    catches -> catch
+Rule 42    catch -> LPAREN expression RPAREN CATCH frame
+Rule 43    escape -> ESCAPE frame
+Rule 44    escape -> ESCAPE LPAREN expression RPAREN frame
+Rule 45    empty -> <empty>
 
 Terminals, with rules where they appear
 
-ACTION               : 24 25
+ACTION               : 20 21
 AND                  : 
-ARROW                : 3 25
-ASSIGN               : 26
+ARROW                : 3
+ASSIGN               : 30 31
 BREAK                : 
 CAST                 : 
 CAT                  : 
-CATCH                : 37
-CHAR                 : 21
-CHASE                : 33 34
+CATCH                : 42
+CHAR                 : 25
+CHASE                : 38 39
 COLON                : 
-COMMA                : 29
+COMMA                : 27 34
 CONTINUE             : 
 CPY                  : 
 DIVIDE               : 10
@@ -101,37 +106,37 @@ DOT                  : 11
 DOUBLE_PIPE          : 
 ELSE                 : 
 EQ                   : 12
-ESCAPE               : 38 39
+ESCAPE               : 43 44
 EXCLAM               : 
 FOR                  : 
 FORM                 : 
 GT                   : 14
 GTE                  : 15
-ID                   : 20 26
+ID                   : 24 29 30 31
 IMPORT               : 
 IN                   : 
 IS                   : 
 KEEP                 : 
-LBRACE               : 2 24
+LBRACE               : 2
 LBRACKET             : 
-LPAREN               : 23 24 25 27 28 37 39
+LPAREN               : 19 20 21 32 33 42 44
 LT                   : 16
 LTE                  : 17
 MEM                  : 
 MINUS                : 8
 NEQ                  : 13
 NOT                  : 
-NUMBER               : 19
+NUMBER               : 23
 OF                   : 
 OR                   : 
 PIPE                 : 
 PLUS                 : 7
-RBRACE               : 2 24
+RBRACE               : 2
 RBRACKET             : 
 RETURN               : 
-RPAREN               : 23 24 25 27 28 37 39
+RPAREN               : 19 20 21 32 33 42 44
 SEMICOLON            : 6
-STRING               : 22
+STRING               : 26
 SWITCH               : 
 THEN                 : 
 THING                : 
@@ -144,19 +149,22 @@ error                :
 
 Nonterminals, with rules where they appear
 
-argument_list        : 28 29
-catch                : 35 36
-catches              : 33 34 35
-chase_no_escape      : 32
-chase_with_escape    : 31
+argument_list        : 33 34
+catch                : 40 41
+catches              : 38 39 40
+chase_no_escape      : 37
+chase_with_escape    : 36
 cutec                : 0
 empty                : 
-escape               : 33
-expression           : 1 3 6 7 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17 17 23 25 26 27 28 29 30 37 39
+escape               : 38
+expression           : 1 3 6 7 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17 17 19 31 32 33 34 35 42 44
 factor               : 18
-frame                : 37 38 39
+frame                : 20 21 42 43 44
+param                : 27 28
+params               : 21 27
+scalar               : 22 30
 statement            : 4 5
-statements           : 2 4 24
+statements           : 2 4
 
 Parsing method: LALR
 
@@ -176,34 +184,36 @@ state 0
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
     cutec                          shift and go to state 1
     expression                     shift and go to state 2
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
 state 1
 
@@ -225,22 +235,22 @@ state 2
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     $end            reduce using rule 1 (cutec -> expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
 
 
 state 3
@@ -268,147 +278,53 @@ state 3
 
 state 4
 
-    (31) expression -> chase_with_escape .
+    (36) expression -> chase_with_escape .
 
-    PLUS            reduce using rule 31 (expression -> chase_with_escape .)
-    MINUS           reduce using rule 31 (expression -> chase_with_escape .)
-    TIMES           reduce using rule 31 (expression -> chase_with_escape .)
-    DIVIDE          reduce using rule 31 (expression -> chase_with_escape .)
-    DOT             reduce using rule 31 (expression -> chase_with_escape .)
-    EQ              reduce using rule 31 (expression -> chase_with_escape .)
-    NEQ             reduce using rule 31 (expression -> chase_with_escape .)
-    GT              reduce using rule 31 (expression -> chase_with_escape .)
-    GTE             reduce using rule 31 (expression -> chase_with_escape .)
-    LT              reduce using rule 31 (expression -> chase_with_escape .)
-    LTE             reduce using rule 31 (expression -> chase_with_escape .)
-    LPAREN          reduce using rule 31 (expression -> chase_with_escape .)
-    $end            reduce using rule 31 (expression -> chase_with_escape .)
-    RPAREN          reduce using rule 31 (expression -> chase_with_escape .)
-    ESCAPE          reduce using rule 31 (expression -> chase_with_escape .)
-    COMMA           reduce using rule 31 (expression -> chase_with_escape .)
-    SEMICOLON       reduce using rule 31 (expression -> chase_with_escape .)
+    PLUS            reduce using rule 36 (expression -> chase_with_escape .)
+    MINUS           reduce using rule 36 (expression -> chase_with_escape .)
+    TIMES           reduce using rule 36 (expression -> chase_with_escape .)
+    DIVIDE          reduce using rule 36 (expression -> chase_with_escape .)
+    DOT             reduce using rule 36 (expression -> chase_with_escape .)
+    EQ              reduce using rule 36 (expression -> chase_with_escape .)
+    NEQ             reduce using rule 36 (expression -> chase_with_escape .)
+    GT              reduce using rule 36 (expression -> chase_with_escape .)
+    GTE             reduce using rule 36 (expression -> chase_with_escape .)
+    LT              reduce using rule 36 (expression -> chase_with_escape .)
+    LTE             reduce using rule 36 (expression -> chase_with_escape .)
+    LPAREN          reduce using rule 36 (expression -> chase_with_escape .)
+    $end            reduce using rule 36 (expression -> chase_with_escape .)
+    RPAREN          reduce using rule 36 (expression -> chase_with_escape .)
+    ESCAPE          reduce using rule 36 (expression -> chase_with_escape .)
+    COMMA           reduce using rule 36 (expression -> chase_with_escape .)
+    SEMICOLON       reduce using rule 36 (expression -> chase_with_escape .)
 
 
 state 5
 
-    (32) expression -> chase_no_escape .
+    (37) expression -> chase_no_escape .
 
-    PLUS            reduce using rule 32 (expression -> chase_no_escape .)
-    MINUS           reduce using rule 32 (expression -> chase_no_escape .)
-    TIMES           reduce using rule 32 (expression -> chase_no_escape .)
-    DIVIDE          reduce using rule 32 (expression -> chase_no_escape .)
-    DOT             reduce using rule 32 (expression -> chase_no_escape .)
-    EQ              reduce using rule 32 (expression -> chase_no_escape .)
-    NEQ             reduce using rule 32 (expression -> chase_no_escape .)
-    GT              reduce using rule 32 (expression -> chase_no_escape .)
-    GTE             reduce using rule 32 (expression -> chase_no_escape .)
-    LT              reduce using rule 32 (expression -> chase_no_escape .)
-    LTE             reduce using rule 32 (expression -> chase_no_escape .)
-    LPAREN          reduce using rule 32 (expression -> chase_no_escape .)
-    $end            reduce using rule 32 (expression -> chase_no_escape .)
-    RPAREN          reduce using rule 32 (expression -> chase_no_escape .)
-    ESCAPE          reduce using rule 32 (expression -> chase_no_escape .)
-    COMMA           reduce using rule 32 (expression -> chase_no_escape .)
-    SEMICOLON       reduce using rule 32 (expression -> chase_no_escape .)
+    PLUS            reduce using rule 37 (expression -> chase_no_escape .)
+    MINUS           reduce using rule 37 (expression -> chase_no_escape .)
+    TIMES           reduce using rule 37 (expression -> chase_no_escape .)
+    DIVIDE          reduce using rule 37 (expression -> chase_no_escape .)
+    DOT             reduce using rule 37 (expression -> chase_no_escape .)
+    EQ              reduce using rule 37 (expression -> chase_no_escape .)
+    NEQ             reduce using rule 37 (expression -> chase_no_escape .)
+    GT              reduce using rule 37 (expression -> chase_no_escape .)
+    GTE             reduce using rule 37 (expression -> chase_no_escape .)
+    LT              reduce using rule 37 (expression -> chase_no_escape .)
+    LTE             reduce using rule 37 (expression -> chase_no_escape .)
+    LPAREN          reduce using rule 37 (expression -> chase_no_escape .)
+    $end            reduce using rule 37 (expression -> chase_no_escape .)
+    RPAREN          reduce using rule 37 (expression -> chase_no_escape .)
+    ESCAPE          reduce using rule 37 (expression -> chase_no_escape .)
+    COMMA           reduce using rule 37 (expression -> chase_no_escape .)
+    SEMICOLON       reduce using rule 37 (expression -> chase_no_escape .)
 
 
 state 6
 
-    (19) factor -> NUMBER .
-
-    PLUS            reduce using rule 19 (factor -> NUMBER .)
-    MINUS           reduce using rule 19 (factor -> NUMBER .)
-    TIMES           reduce using rule 19 (factor -> NUMBER .)
-    DIVIDE          reduce using rule 19 (factor -> NUMBER .)
-    DOT             reduce using rule 19 (factor -> NUMBER .)
-    EQ              reduce using rule 19 (factor -> NUMBER .)
-    NEQ             reduce using rule 19 (factor -> NUMBER .)
-    GT              reduce using rule 19 (factor -> NUMBER .)
-    GTE             reduce using rule 19 (factor -> NUMBER .)
-    LT              reduce using rule 19 (factor -> NUMBER .)
-    LTE             reduce using rule 19 (factor -> NUMBER .)
-    LPAREN          reduce using rule 19 (factor -> NUMBER .)
-    $end            reduce using rule 19 (factor -> NUMBER .)
-    RPAREN          reduce using rule 19 (factor -> NUMBER .)
-    ESCAPE          reduce using rule 19 (factor -> NUMBER .)
-    COMMA           reduce using rule 19 (factor -> NUMBER .)
-    SEMICOLON       reduce using rule 19 (factor -> NUMBER .)
-
-
-state 7
-
-    (20) factor -> ID .
-    (26) factor -> ID . ASSIGN expression
-
-    PLUS            reduce using rule 20 (factor -> ID .)
-    MINUS           reduce using rule 20 (factor -> ID .)
-    TIMES           reduce using rule 20 (factor -> ID .)
-    DIVIDE          reduce using rule 20 (factor -> ID .)
-    DOT             reduce using rule 20 (factor -> ID .)
-    EQ              reduce using rule 20 (factor -> ID .)
-    NEQ             reduce using rule 20 (factor -> ID .)
-    GT              reduce using rule 20 (factor -> ID .)
-    GTE             reduce using rule 20 (factor -> ID .)
-    LT              reduce using rule 20 (factor -> ID .)
-    LTE             reduce using rule 20 (factor -> ID .)
-    LPAREN          reduce using rule 20 (factor -> ID .)
-    $end            reduce using rule 20 (factor -> ID .)
-    RPAREN          reduce using rule 20 (factor -> ID .)
-    ESCAPE          reduce using rule 20 (factor -> ID .)
-    COMMA           reduce using rule 20 (factor -> ID .)
-    SEMICOLON       reduce using rule 20 (factor -> ID .)
-    ASSIGN          shift and go to state 25
-
-
-state 8
-
-    (21) factor -> CHAR .
-
-    PLUS            reduce using rule 21 (factor -> CHAR .)
-    MINUS           reduce using rule 21 (factor -> CHAR .)
-    TIMES           reduce using rule 21 (factor -> CHAR .)
-    DIVIDE          reduce using rule 21 (factor -> CHAR .)
-    DOT             reduce using rule 21 (factor -> CHAR .)
-    EQ              reduce using rule 21 (factor -> CHAR .)
-    NEQ             reduce using rule 21 (factor -> CHAR .)
-    GT              reduce using rule 21 (factor -> CHAR .)
-    GTE             reduce using rule 21 (factor -> CHAR .)
-    LT              reduce using rule 21 (factor -> CHAR .)
-    LTE             reduce using rule 21 (factor -> CHAR .)
-    LPAREN          reduce using rule 21 (factor -> CHAR .)
-    $end            reduce using rule 21 (factor -> CHAR .)
-    RPAREN          reduce using rule 21 (factor -> CHAR .)
-    ESCAPE          reduce using rule 21 (factor -> CHAR .)
-    COMMA           reduce using rule 21 (factor -> CHAR .)
-    SEMICOLON       reduce using rule 21 (factor -> CHAR .)
-
-
-state 9
-
-    (22) factor -> STRING .
-
-    PLUS            reduce using rule 22 (factor -> STRING .)
-    MINUS           reduce using rule 22 (factor -> STRING .)
-    TIMES           reduce using rule 22 (factor -> STRING .)
-    DIVIDE          reduce using rule 22 (factor -> STRING .)
-    DOT             reduce using rule 22 (factor -> STRING .)
-    EQ              reduce using rule 22 (factor -> STRING .)
-    NEQ             reduce using rule 22 (factor -> STRING .)
-    GT              reduce using rule 22 (factor -> STRING .)
-    GTE             reduce using rule 22 (factor -> STRING .)
-    LT              reduce using rule 22 (factor -> STRING .)
-    LTE             reduce using rule 22 (factor -> STRING .)
-    LPAREN          reduce using rule 22 (factor -> STRING .)
-    $end            reduce using rule 22 (factor -> STRING .)
-    RPAREN          reduce using rule 22 (factor -> STRING .)
-    ESCAPE          reduce using rule 22 (factor -> STRING .)
-    COMMA           reduce using rule 22 (factor -> STRING .)
-    SEMICOLON       reduce using rule 22 (factor -> STRING .)
-
-
-state 10
-
-    (23) factor -> LPAREN . expression RPAREN
+    (19) factor -> LPAREN . expression RPAREN
     (7) expression -> . expression PLUS expression
     (8) expression -> . expression MINUS expression
     (9) expression -> . expression TIMES expression
@@ -421,56 +337,175 @@ state 10
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
     expression                     shift and go to state 26
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 11
+state 7
 
-    (24) factor -> ACTION . LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> ACTION . LPAREN RPAREN ARROW expression
+    (20) factor -> ACTION . LPAREN RPAREN frame
+    (21) factor -> ACTION . LPAREN params RPAREN frame
 
     LPAREN          shift and go to state 27
 
 
+state 8
+
+    (22) factor -> scalar .
+
+    PLUS            reduce using rule 22 (factor -> scalar .)
+    MINUS           reduce using rule 22 (factor -> scalar .)
+    TIMES           reduce using rule 22 (factor -> scalar .)
+    DIVIDE          reduce using rule 22 (factor -> scalar .)
+    DOT             reduce using rule 22 (factor -> scalar .)
+    EQ              reduce using rule 22 (factor -> scalar .)
+    NEQ             reduce using rule 22 (factor -> scalar .)
+    GT              reduce using rule 22 (factor -> scalar .)
+    GTE             reduce using rule 22 (factor -> scalar .)
+    LT              reduce using rule 22 (factor -> scalar .)
+    LTE             reduce using rule 22 (factor -> scalar .)
+    LPAREN          reduce using rule 22 (factor -> scalar .)
+    $end            reduce using rule 22 (factor -> scalar .)
+    RPAREN          reduce using rule 22 (factor -> scalar .)
+    ESCAPE          reduce using rule 22 (factor -> scalar .)
+    COMMA           reduce using rule 22 (factor -> scalar .)
+    SEMICOLON       reduce using rule 22 (factor -> scalar .)
+
+
+state 9
+
+    (31) factor -> ID . ASSIGN expression
+    (24) scalar -> ID .
+
+    ASSIGN          shift and go to state 28
+    PLUS            reduce using rule 24 (scalar -> ID .)
+    MINUS           reduce using rule 24 (scalar -> ID .)
+    TIMES           reduce using rule 24 (scalar -> ID .)
+    DIVIDE          reduce using rule 24 (scalar -> ID .)
+    DOT             reduce using rule 24 (scalar -> ID .)
+    EQ              reduce using rule 24 (scalar -> ID .)
+    NEQ             reduce using rule 24 (scalar -> ID .)
+    GT              reduce using rule 24 (scalar -> ID .)
+    GTE             reduce using rule 24 (scalar -> ID .)
+    LT              reduce using rule 24 (scalar -> ID .)
+    LTE             reduce using rule 24 (scalar -> ID .)
+    LPAREN          reduce using rule 24 (scalar -> ID .)
+    $end            reduce using rule 24 (scalar -> ID .)
+    RPAREN          reduce using rule 24 (scalar -> ID .)
+    ESCAPE          reduce using rule 24 (scalar -> ID .)
+    COMMA           reduce using rule 24 (scalar -> ID .)
+    SEMICOLON       reduce using rule 24 (scalar -> ID .)
+
+
+state 10
+
+    (38) chase_with_escape -> CHASE . catches escape
+    (39) chase_no_escape -> CHASE . catches
+    (40) catches -> . catches catch
+    (41) catches -> . catch
+    (42) catch -> . LPAREN expression RPAREN CATCH frame
+
+    LPAREN          shift and go to state 31
+
+    catches                        shift and go to state 29
+    catch                          shift and go to state 30
+
+state 11
+
+    (23) scalar -> NUMBER .
+
+    PLUS            reduce using rule 23 (scalar -> NUMBER .)
+    MINUS           reduce using rule 23 (scalar -> NUMBER .)
+    TIMES           reduce using rule 23 (scalar -> NUMBER .)
+    DIVIDE          reduce using rule 23 (scalar -> NUMBER .)
+    DOT             reduce using rule 23 (scalar -> NUMBER .)
+    EQ              reduce using rule 23 (scalar -> NUMBER .)
+    NEQ             reduce using rule 23 (scalar -> NUMBER .)
+    GT              reduce using rule 23 (scalar -> NUMBER .)
+    GTE             reduce using rule 23 (scalar -> NUMBER .)
+    LT              reduce using rule 23 (scalar -> NUMBER .)
+    LTE             reduce using rule 23 (scalar -> NUMBER .)
+    LPAREN          reduce using rule 23 (scalar -> NUMBER .)
+    $end            reduce using rule 23 (scalar -> NUMBER .)
+    RPAREN          reduce using rule 23 (scalar -> NUMBER .)
+    ESCAPE          reduce using rule 23 (scalar -> NUMBER .)
+    COMMA           reduce using rule 23 (scalar -> NUMBER .)
+    SEMICOLON       reduce using rule 23 (scalar -> NUMBER .)
+
+
 state 12
 
-    (33) chase_with_escape -> CHASE . catches escape
-    (34) chase_no_escape -> CHASE . catches
-    (35) catches -> . catches catch
-    (36) catches -> . catch
-    (37) catch -> . LPAREN expression RPAREN CATCH frame
+    (25) scalar -> CHAR .
 
-    LPAREN          shift and go to state 30
+    PLUS            reduce using rule 25 (scalar -> CHAR .)
+    MINUS           reduce using rule 25 (scalar -> CHAR .)
+    TIMES           reduce using rule 25 (scalar -> CHAR .)
+    DIVIDE          reduce using rule 25 (scalar -> CHAR .)
+    DOT             reduce using rule 25 (scalar -> CHAR .)
+    EQ              reduce using rule 25 (scalar -> CHAR .)
+    NEQ             reduce using rule 25 (scalar -> CHAR .)
+    GT              reduce using rule 25 (scalar -> CHAR .)
+    GTE             reduce using rule 25 (scalar -> CHAR .)
+    LT              reduce using rule 25 (scalar -> CHAR .)
+    LTE             reduce using rule 25 (scalar -> CHAR .)
+    LPAREN          reduce using rule 25 (scalar -> CHAR .)
+    $end            reduce using rule 25 (scalar -> CHAR .)
+    RPAREN          reduce using rule 25 (scalar -> CHAR .)
+    ESCAPE          reduce using rule 25 (scalar -> CHAR .)
+    COMMA           reduce using rule 25 (scalar -> CHAR .)
+    SEMICOLON       reduce using rule 25 (scalar -> CHAR .)
 
-    catches                        shift and go to state 28
-    catch                          shift and go to state 29
 
 state 13
+
+    (26) scalar -> STRING .
+
+    PLUS            reduce using rule 26 (scalar -> STRING .)
+    MINUS           reduce using rule 26 (scalar -> STRING .)
+    TIMES           reduce using rule 26 (scalar -> STRING .)
+    DIVIDE          reduce using rule 26 (scalar -> STRING .)
+    DOT             reduce using rule 26 (scalar -> STRING .)
+    EQ              reduce using rule 26 (scalar -> STRING .)
+    NEQ             reduce using rule 26 (scalar -> STRING .)
+    GT              reduce using rule 26 (scalar -> STRING .)
+    GTE             reduce using rule 26 (scalar -> STRING .)
+    LT              reduce using rule 26 (scalar -> STRING .)
+    LTE             reduce using rule 26 (scalar -> STRING .)
+    LPAREN          reduce using rule 26 (scalar -> STRING .)
+    $end            reduce using rule 26 (scalar -> STRING .)
+    RPAREN          reduce using rule 26 (scalar -> STRING .)
+    ESCAPE          reduce using rule 26 (scalar -> STRING .)
+    COMMA           reduce using rule 26 (scalar -> STRING .)
+    SEMICOLON       reduce using rule 26 (scalar -> STRING .)
+
+
+state 14
 
     (7) expression -> expression PLUS . expression
     (7) expression -> . expression PLUS expression
@@ -485,35 +520,37 @@ state 13
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 31
+    expression                     shift and go to state 32
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 14
+state 15
 
     (8) expression -> expression MINUS . expression
     (7) expression -> . expression PLUS expression
@@ -528,35 +565,37 @@ state 14
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 32
+    expression                     shift and go to state 33
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 15
+state 16
 
     (9) expression -> expression TIMES . expression
     (7) expression -> . expression PLUS expression
@@ -571,35 +610,37 @@ state 15
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 33
+    expression                     shift and go to state 34
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 16
+state 17
 
     (10) expression -> expression DIVIDE . expression
     (7) expression -> . expression PLUS expression
@@ -614,35 +655,37 @@ state 16
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 34
+    expression                     shift and go to state 35
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 17
+state 18
 
     (11) expression -> expression DOT . expression
     (7) expression -> . expression PLUS expression
@@ -657,35 +700,37 @@ state 17
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 35
+    expression                     shift and go to state 36
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 18
+state 19
 
     (12) expression -> expression EQ . expression
     (7) expression -> . expression PLUS expression
@@ -700,35 +745,37 @@ state 18
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 36
+    expression                     shift and go to state 37
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 19
+state 20
 
     (13) expression -> expression NEQ . expression
     (7) expression -> . expression PLUS expression
@@ -743,35 +790,37 @@ state 19
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 37
+    expression                     shift and go to state 38
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 20
+state 21
 
     (14) expression -> expression GT . expression
     (7) expression -> . expression PLUS expression
@@ -786,35 +835,37 @@ state 20
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 38
+    expression                     shift and go to state 39
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 21
+state 22
 
     (15) expression -> expression GTE . expression
     (7) expression -> . expression PLUS expression
@@ -829,35 +880,37 @@ state 21
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 39
+    expression                     shift and go to state 40
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 22
+state 23
 
     (16) expression -> expression LT . expression
     (7) expression -> . expression PLUS expression
@@ -872,35 +925,37 @@ state 22
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 40
+    expression                     shift and go to state 41
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 23
+state 24
 
     (17) expression -> expression LTE . expression
     (7) expression -> . expression PLUS expression
@@ -915,85 +970,42 @@ state 23
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
-
-    expression                     shift and go to state 41
-    factor                         shift and go to state 3
-    chase_with_escape              shift and go to state 4
-    chase_no_escape                shift and go to state 5
-
-state 24
-
-    (27) factor -> expression LPAREN . RPAREN
-    (28) factor -> expression LPAREN . argument_list RPAREN
-    (29) argument_list -> . argument_list COMMA expression
-    (30) argument_list -> . expression
-    (7) expression -> . expression PLUS expression
-    (8) expression -> . expression MINUS expression
-    (9) expression -> . expression TIMES expression
-    (10) expression -> . expression DIVIDE expression
-    (11) expression -> . expression DOT expression
-    (12) expression -> . expression EQ expression
-    (13) expression -> . expression NEQ expression
-    (14) expression -> . expression GT expression
-    (15) expression -> . expression GTE expression
-    (16) expression -> . expression LT expression
-    (17) expression -> . expression LTE expression
-    (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
-
-    RPAREN          shift and go to state 43
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
     expression                     shift and go to state 42
-    argument_list                  shift and go to state 44
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
 state 25
 
-    (26) factor -> ID ASSIGN . expression
+    (32) factor -> expression LPAREN . RPAREN
+    (33) factor -> expression LPAREN . argument_list RPAREN
+    (34) argument_list -> . argument_list COMMA expression
+    (35) argument_list -> . expression
     (7) expression -> . expression PLUS expression
     (8) expression -> . expression MINUS expression
     (9) expression -> . expression TIMES expression
@@ -1006,37 +1018,41 @@ state 25
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    RPAREN          shift and go to state 44
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 45
+    expression                     shift and go to state 43
+    argument_list                  shift and go to state 45
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
 state 26
 
-    (23) factor -> LPAREN expression . RPAREN
+    (19) factor -> LPAREN expression . RPAREN
     (7) expression -> expression . PLUS expression
     (8) expression -> expression . MINUS expression
     (9) expression -> expression . TIMES expression
@@ -1048,91 +1064,42 @@ state 26
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     RPAREN          shift and go to state 46
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
 
 
 state 27
 
-    (24) factor -> ACTION LPAREN . RPAREN LBRACE statements RBRACE
-    (25) factor -> ACTION LPAREN . RPAREN ARROW expression
+    (20) factor -> ACTION LPAREN . RPAREN frame
+    (21) factor -> ACTION LPAREN . params RPAREN frame
+    (27) params -> . params COMMA param
+    (28) params -> . param
+    (29) param -> . ID
+    (30) param -> . ID ASSIGN scalar
 
     RPAREN          shift and go to state 47
+    ID              shift and go to state 50
 
+    params                         shift and go to state 48
+    param                          shift and go to state 49
 
 state 28
 
-    (33) chase_with_escape -> CHASE catches . escape
-    (34) chase_no_escape -> CHASE catches .
-    (35) catches -> catches . catch
-    (38) escape -> . ESCAPE frame
-    (39) escape -> . ESCAPE LPAREN expression RPAREN frame
-    (37) catch -> . LPAREN expression RPAREN CATCH frame
-
-    PLUS            reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    MINUS           reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    TIMES           reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    DIVIDE          reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    DOT             reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    EQ              reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    NEQ             reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    GT              reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    GTE             reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    LT              reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    LTE             reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    $end            reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    RPAREN          reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    COMMA           reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    SEMICOLON       reduce using rule 34 (chase_no_escape -> CHASE catches .)
-    ESCAPE          shift and go to state 50
-    LPAREN          shift and go to state 30
-
-  ! LPAREN          [ reduce using rule 34 (chase_no_escape -> CHASE catches .) ]
-  ! ESCAPE          [ reduce using rule 34 (chase_no_escape -> CHASE catches .) ]
-
-    escape                         shift and go to state 48
-    catch                          shift and go to state 49
-
-state 29
-
-    (36) catches -> catch .
-
-    ESCAPE          reduce using rule 36 (catches -> catch .)
-    LPAREN          reduce using rule 36 (catches -> catch .)
-    PLUS            reduce using rule 36 (catches -> catch .)
-    MINUS           reduce using rule 36 (catches -> catch .)
-    TIMES           reduce using rule 36 (catches -> catch .)
-    DIVIDE          reduce using rule 36 (catches -> catch .)
-    DOT             reduce using rule 36 (catches -> catch .)
-    EQ              reduce using rule 36 (catches -> catch .)
-    NEQ             reduce using rule 36 (catches -> catch .)
-    GT              reduce using rule 36 (catches -> catch .)
-    GTE             reduce using rule 36 (catches -> catch .)
-    LT              reduce using rule 36 (catches -> catch .)
-    LTE             reduce using rule 36 (catches -> catch .)
-    $end            reduce using rule 36 (catches -> catch .)
-    RPAREN          reduce using rule 36 (catches -> catch .)
-    COMMA           reduce using rule 36 (catches -> catch .)
-    SEMICOLON       reduce using rule 36 (catches -> catch .)
-
-
-state 30
-
-    (37) catch -> LPAREN . expression RPAREN CATCH frame
+    (31) factor -> ID ASSIGN . expression
     (7) expression -> . expression PLUS expression
     (8) expression -> . expression MINUS expression
     (9) expression -> . expression TIMES expression
@@ -1145,35 +1112,138 @@ state 30
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
     expression                     shift and go to state 51
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
+
+state 29
+
+    (38) chase_with_escape -> CHASE catches . escape
+    (39) chase_no_escape -> CHASE catches .
+    (40) catches -> catches . catch
+    (43) escape -> . ESCAPE frame
+    (44) escape -> . ESCAPE LPAREN expression RPAREN frame
+    (42) catch -> . LPAREN expression RPAREN CATCH frame
+
+    PLUS            reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    MINUS           reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    TIMES           reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    DIVIDE          reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    DOT             reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    EQ              reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    NEQ             reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    GT              reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    GTE             reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    LT              reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    LTE             reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    $end            reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    RPAREN          reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    COMMA           reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    SEMICOLON       reduce using rule 39 (chase_no_escape -> CHASE catches .)
+    ESCAPE          shift and go to state 54
+    LPAREN          shift and go to state 31
+
+  ! LPAREN          [ reduce using rule 39 (chase_no_escape -> CHASE catches .) ]
+  ! ESCAPE          [ reduce using rule 39 (chase_no_escape -> CHASE catches .) ]
+
+    escape                         shift and go to state 52
+    catch                          shift and go to state 53
+
+state 30
+
+    (41) catches -> catch .
+
+    ESCAPE          reduce using rule 41 (catches -> catch .)
+    LPAREN          reduce using rule 41 (catches -> catch .)
+    PLUS            reduce using rule 41 (catches -> catch .)
+    MINUS           reduce using rule 41 (catches -> catch .)
+    TIMES           reduce using rule 41 (catches -> catch .)
+    DIVIDE          reduce using rule 41 (catches -> catch .)
+    DOT             reduce using rule 41 (catches -> catch .)
+    EQ              reduce using rule 41 (catches -> catch .)
+    NEQ             reduce using rule 41 (catches -> catch .)
+    GT              reduce using rule 41 (catches -> catch .)
+    GTE             reduce using rule 41 (catches -> catch .)
+    LT              reduce using rule 41 (catches -> catch .)
+    LTE             reduce using rule 41 (catches -> catch .)
+    $end            reduce using rule 41 (catches -> catch .)
+    RPAREN          reduce using rule 41 (catches -> catch .)
+    COMMA           reduce using rule 41 (catches -> catch .)
+    SEMICOLON       reduce using rule 41 (catches -> catch .)
+
 
 state 31
+
+    (42) catch -> LPAREN . expression RPAREN CATCH frame
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression TIMES expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression DOT expression
+    (12) expression -> . expression EQ expression
+    (13) expression -> . expression NEQ expression
+    (14) expression -> . expression GT expression
+    (15) expression -> . expression GTE expression
+    (16) expression -> . expression LT expression
+    (17) expression -> . expression LTE expression
+    (18) expression -> . factor
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
+
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
+
+    expression                     shift and go to state 55
+    factor                         shift and go to state 3
+    chase_with_escape              shift and go to state 4
+    chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
+
+state 32
 
     (7) expression -> expression PLUS expression .
     (7) expression -> expression . PLUS expression
@@ -1187,8 +1257,8 @@ state 31
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     PLUS            reduce using rule 7 (expression -> expression PLUS expression .)
     MINUS           reduce using rule 7 (expression -> expression PLUS expression .)
@@ -1203,26 +1273,26 @@ state 31
     ESCAPE          reduce using rule 7 (expression -> expression PLUS expression .)
     COMMA           reduce using rule 7 (expression -> expression PLUS expression .)
     SEMICOLON       reduce using rule 7 (expression -> expression PLUS expression .)
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! TIMES           [ reduce using rule 7 (expression -> expression PLUS expression .) ]
   ! DIVIDE          [ reduce using rule 7 (expression -> expression PLUS expression .) ]
   ! DOT             [ reduce using rule 7 (expression -> expression PLUS expression .) ]
   ! LPAREN          [ reduce using rule 7 (expression -> expression PLUS expression .) ]
-  ! PLUS            [ shift and go to state 13 ]
-  ! MINUS           [ shift and go to state 14 ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 14 ]
+  ! MINUS           [ shift and go to state 15 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 32
+state 33
 
     (8) expression -> expression MINUS expression .
     (7) expression -> expression . PLUS expression
@@ -1236,8 +1306,8 @@ state 32
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     PLUS            reduce using rule 8 (expression -> expression MINUS expression .)
     MINUS           reduce using rule 8 (expression -> expression MINUS expression .)
@@ -1252,26 +1322,26 @@ state 32
     ESCAPE          reduce using rule 8 (expression -> expression MINUS expression .)
     COMMA           reduce using rule 8 (expression -> expression MINUS expression .)
     SEMICOLON       reduce using rule 8 (expression -> expression MINUS expression .)
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! TIMES           [ reduce using rule 8 (expression -> expression MINUS expression .) ]
   ! DIVIDE          [ reduce using rule 8 (expression -> expression MINUS expression .) ]
   ! DOT             [ reduce using rule 8 (expression -> expression MINUS expression .) ]
   ! LPAREN          [ reduce using rule 8 (expression -> expression MINUS expression .) ]
-  ! PLUS            [ shift and go to state 13 ]
-  ! MINUS           [ shift and go to state 14 ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 14 ]
+  ! MINUS           [ shift and go to state 15 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 33
+state 34
 
     (9) expression -> expression TIMES expression .
     (7) expression -> expression . PLUS expression
@@ -1285,8 +1355,8 @@ state 33
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     PLUS            reduce using rule 9 (expression -> expression TIMES expression .)
     MINUS           reduce using rule 9 (expression -> expression TIMES expression .)
@@ -1303,24 +1373,24 @@ state 33
     ESCAPE          reduce using rule 9 (expression -> expression TIMES expression .)
     COMMA           reduce using rule 9 (expression -> expression TIMES expression .)
     SEMICOLON       reduce using rule 9 (expression -> expression TIMES expression .)
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! DOT             [ reduce using rule 9 (expression -> expression TIMES expression .) ]
   ! LPAREN          [ reduce using rule 9 (expression -> expression TIMES expression .) ]
-  ! PLUS            [ shift and go to state 13 ]
-  ! MINUS           [ shift and go to state 14 ]
-  ! TIMES           [ shift and go to state 15 ]
-  ! DIVIDE          [ shift and go to state 16 ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 14 ]
+  ! MINUS           [ shift and go to state 15 ]
+  ! TIMES           [ shift and go to state 16 ]
+  ! DIVIDE          [ shift and go to state 17 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 34
+state 35
 
     (10) expression -> expression DIVIDE expression .
     (7) expression -> expression . PLUS expression
@@ -1334,8 +1404,8 @@ state 34
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     PLUS            reduce using rule 10 (expression -> expression DIVIDE expression .)
     MINUS           reduce using rule 10 (expression -> expression DIVIDE expression .)
@@ -1352,24 +1422,24 @@ state 34
     ESCAPE          reduce using rule 10 (expression -> expression DIVIDE expression .)
     COMMA           reduce using rule 10 (expression -> expression DIVIDE expression .)
     SEMICOLON       reduce using rule 10 (expression -> expression DIVIDE expression .)
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! DOT             [ reduce using rule 10 (expression -> expression DIVIDE expression .) ]
   ! LPAREN          [ reduce using rule 10 (expression -> expression DIVIDE expression .) ]
-  ! PLUS            [ shift and go to state 13 ]
-  ! MINUS           [ shift and go to state 14 ]
-  ! TIMES           [ shift and go to state 15 ]
-  ! DIVIDE          [ shift and go to state 16 ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 14 ]
+  ! MINUS           [ shift and go to state 15 ]
+  ! TIMES           [ shift and go to state 16 ]
+  ! DIVIDE          [ shift and go to state 17 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 35
+state 36
 
     (11) expression -> expression DOT expression .
     (7) expression -> expression . PLUS expression
@@ -1383,8 +1453,8 @@ state 35
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     PLUS            reduce using rule 11 (expression -> expression DOT expression .)
     MINUS           reduce using rule 11 (expression -> expression DOT expression .)
@@ -1404,21 +1474,21 @@ state 35
     COMMA           reduce using rule 11 (expression -> expression DOT expression .)
     SEMICOLON       reduce using rule 11 (expression -> expression DOT expression .)
 
-  ! PLUS            [ shift and go to state 13 ]
-  ! MINUS           [ shift and go to state 14 ]
-  ! TIMES           [ shift and go to state 15 ]
-  ! DIVIDE          [ shift and go to state 16 ]
-  ! DOT             [ shift and go to state 17 ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
-  ! LPAREN          [ shift and go to state 24 ]
+  ! PLUS            [ shift and go to state 14 ]
+  ! MINUS           [ shift and go to state 15 ]
+  ! TIMES           [ shift and go to state 16 ]
+  ! DIVIDE          [ shift and go to state 17 ]
+  ! DOT             [ shift and go to state 18 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
+  ! LPAREN          [ shift and go to state 25 ]
 
 
-state 36
+state 37
 
     (12) expression -> expression EQ expression .
     (7) expression -> expression . PLUS expression
@@ -1432,8 +1502,8 @@ state 36
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     EQ              reduce using rule 12 (expression -> expression EQ expression .)
     NEQ             reduce using rule 12 (expression -> expression EQ expression .)
@@ -1446,12 +1516,12 @@ state 36
     ESCAPE          reduce using rule 12 (expression -> expression EQ expression .)
     COMMA           reduce using rule 12 (expression -> expression EQ expression .)
     SEMICOLON       reduce using rule 12 (expression -> expression EQ expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! PLUS            [ reduce using rule 12 (expression -> expression EQ expression .) ]
   ! MINUS           [ reduce using rule 12 (expression -> expression EQ expression .) ]
@@ -1459,15 +1529,15 @@ state 36
   ! DIVIDE          [ reduce using rule 12 (expression -> expression EQ expression .) ]
   ! DOT             [ reduce using rule 12 (expression -> expression EQ expression .) ]
   ! LPAREN          [ reduce using rule 12 (expression -> expression EQ expression .) ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 37
+state 38
 
     (13) expression -> expression NEQ expression .
     (7) expression -> expression . PLUS expression
@@ -1481,8 +1551,8 @@ state 37
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     EQ              reduce using rule 13 (expression -> expression NEQ expression .)
     NEQ             reduce using rule 13 (expression -> expression NEQ expression .)
@@ -1495,12 +1565,12 @@ state 37
     ESCAPE          reduce using rule 13 (expression -> expression NEQ expression .)
     COMMA           reduce using rule 13 (expression -> expression NEQ expression .)
     SEMICOLON       reduce using rule 13 (expression -> expression NEQ expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! PLUS            [ reduce using rule 13 (expression -> expression NEQ expression .) ]
   ! MINUS           [ reduce using rule 13 (expression -> expression NEQ expression .) ]
@@ -1508,15 +1578,15 @@ state 37
   ! DIVIDE          [ reduce using rule 13 (expression -> expression NEQ expression .) ]
   ! DOT             [ reduce using rule 13 (expression -> expression NEQ expression .) ]
   ! LPAREN          [ reduce using rule 13 (expression -> expression NEQ expression .) ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 38
+state 39
 
     (14) expression -> expression GT expression .
     (7) expression -> expression . PLUS expression
@@ -1530,8 +1600,8 @@ state 38
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     EQ              reduce using rule 14 (expression -> expression GT expression .)
     NEQ             reduce using rule 14 (expression -> expression GT expression .)
@@ -1544,12 +1614,12 @@ state 38
     ESCAPE          reduce using rule 14 (expression -> expression GT expression .)
     COMMA           reduce using rule 14 (expression -> expression GT expression .)
     SEMICOLON       reduce using rule 14 (expression -> expression GT expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! PLUS            [ reduce using rule 14 (expression -> expression GT expression .) ]
   ! MINUS           [ reduce using rule 14 (expression -> expression GT expression .) ]
@@ -1557,15 +1627,15 @@ state 38
   ! DIVIDE          [ reduce using rule 14 (expression -> expression GT expression .) ]
   ! DOT             [ reduce using rule 14 (expression -> expression GT expression .) ]
   ! LPAREN          [ reduce using rule 14 (expression -> expression GT expression .) ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 39
+state 40
 
     (15) expression -> expression GTE expression .
     (7) expression -> expression . PLUS expression
@@ -1579,8 +1649,8 @@ state 39
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     EQ              reduce using rule 15 (expression -> expression GTE expression .)
     NEQ             reduce using rule 15 (expression -> expression GTE expression .)
@@ -1593,12 +1663,12 @@ state 39
     ESCAPE          reduce using rule 15 (expression -> expression GTE expression .)
     COMMA           reduce using rule 15 (expression -> expression GTE expression .)
     SEMICOLON       reduce using rule 15 (expression -> expression GTE expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! PLUS            [ reduce using rule 15 (expression -> expression GTE expression .) ]
   ! MINUS           [ reduce using rule 15 (expression -> expression GTE expression .) ]
@@ -1606,15 +1676,15 @@ state 39
   ! DIVIDE          [ reduce using rule 15 (expression -> expression GTE expression .) ]
   ! DOT             [ reduce using rule 15 (expression -> expression GTE expression .) ]
   ! LPAREN          [ reduce using rule 15 (expression -> expression GTE expression .) ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 40
+state 41
 
     (16) expression -> expression LT expression .
     (7) expression -> expression . PLUS expression
@@ -1628,8 +1698,8 @@ state 40
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     EQ              reduce using rule 16 (expression -> expression LT expression .)
     NEQ             reduce using rule 16 (expression -> expression LT expression .)
@@ -1642,12 +1712,12 @@ state 40
     ESCAPE          reduce using rule 16 (expression -> expression LT expression .)
     COMMA           reduce using rule 16 (expression -> expression LT expression .)
     SEMICOLON       reduce using rule 16 (expression -> expression LT expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! PLUS            [ reduce using rule 16 (expression -> expression LT expression .) ]
   ! MINUS           [ reduce using rule 16 (expression -> expression LT expression .) ]
@@ -1655,15 +1725,15 @@ state 40
   ! DIVIDE          [ reduce using rule 16 (expression -> expression LT expression .) ]
   ! DOT             [ reduce using rule 16 (expression -> expression LT expression .) ]
   ! LPAREN          [ reduce using rule 16 (expression -> expression LT expression .) ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
-state 41
+state 42
 
     (17) expression -> expression LTE expression .
     (7) expression -> expression . PLUS expression
@@ -1677,8 +1747,8 @@ state 41
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     EQ              reduce using rule 17 (expression -> expression LTE expression .)
     NEQ             reduce using rule 17 (expression -> expression LTE expression .)
@@ -1691,12 +1761,12 @@ state 41
     ESCAPE          reduce using rule 17 (expression -> expression LTE expression .)
     COMMA           reduce using rule 17 (expression -> expression LTE expression .)
     SEMICOLON       reduce using rule 17 (expression -> expression LTE expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    LPAREN          shift and go to state 25
 
   ! PLUS            [ reduce using rule 17 (expression -> expression LTE expression .) ]
   ! MINUS           [ reduce using rule 17 (expression -> expression LTE expression .) ]
@@ -1704,222 +1774,143 @@ state 41
   ! DIVIDE          [ reduce using rule 17 (expression -> expression LTE expression .) ]
   ! DOT             [ reduce using rule 17 (expression -> expression LTE expression .) ]
   ! LPAREN          [ reduce using rule 17 (expression -> expression LTE expression .) ]
-  ! EQ              [ shift and go to state 18 ]
-  ! NEQ             [ shift and go to state 19 ]
-  ! GT              [ shift and go to state 20 ]
-  ! GTE             [ shift and go to state 21 ]
-  ! LT              [ shift and go to state 22 ]
-  ! LTE             [ shift and go to state 23 ]
-
-
-state 42
-
-    (30) argument_list -> expression .
-    (7) expression -> expression . PLUS expression
-    (8) expression -> expression . MINUS expression
-    (9) expression -> expression . TIMES expression
-    (10) expression -> expression . DIVIDE expression
-    (11) expression -> expression . DOT expression
-    (12) expression -> expression . EQ expression
-    (13) expression -> expression . NEQ expression
-    (14) expression -> expression . GT expression
-    (15) expression -> expression . GTE expression
-    (16) expression -> expression . LT expression
-    (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
-
-    RPAREN          reduce using rule 30 (argument_list -> expression .)
-    COMMA           reduce using rule 30 (argument_list -> expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
+  ! EQ              [ shift and go to state 19 ]
+  ! NEQ             [ shift and go to state 20 ]
+  ! GT              [ shift and go to state 21 ]
+  ! GTE             [ shift and go to state 22 ]
+  ! LT              [ shift and go to state 23 ]
+  ! LTE             [ shift and go to state 24 ]
 
 
 state 43
 
-    (27) factor -> expression LPAREN RPAREN .
+    (35) argument_list -> expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . TIMES expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . DOT expression
+    (12) expression -> expression . EQ expression
+    (13) expression -> expression . NEQ expression
+    (14) expression -> expression . GT expression
+    (15) expression -> expression . GTE expression
+    (16) expression -> expression . LT expression
+    (17) expression -> expression . LTE expression
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
-    PLUS            reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    MINUS           reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    TIMES           reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    DIVIDE          reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    DOT             reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    EQ              reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    NEQ             reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    GT              reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    GTE             reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    LT              reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    LTE             reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    LPAREN          reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    $end            reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    RPAREN          reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    ESCAPE          reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    COMMA           reduce using rule 27 (factor -> expression LPAREN RPAREN .)
-    SEMICOLON       reduce using rule 27 (factor -> expression LPAREN RPAREN .)
+    RPAREN          reduce using rule 35 (argument_list -> expression .)
+    COMMA           reduce using rule 35 (argument_list -> expression .)
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
 
 
 state 44
 
-    (28) factor -> expression LPAREN argument_list . RPAREN
-    (29) argument_list -> argument_list . COMMA expression
+    (32) factor -> expression LPAREN RPAREN .
 
-    RPAREN          shift and go to state 52
-    COMMA           shift and go to state 53
+    PLUS            reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    MINUS           reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    TIMES           reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    DIVIDE          reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    DOT             reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    EQ              reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    NEQ             reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    GT              reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    GTE             reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    LT              reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    LTE             reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    LPAREN          reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    $end            reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    RPAREN          reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    ESCAPE          reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    COMMA           reduce using rule 32 (factor -> expression LPAREN RPAREN .)
+    SEMICOLON       reduce using rule 32 (factor -> expression LPAREN RPAREN .)
 
 
 state 45
 
-    (26) factor -> ID ASSIGN expression .
-    (7) expression -> expression . PLUS expression
-    (8) expression -> expression . MINUS expression
-    (9) expression -> expression . TIMES expression
-    (10) expression -> expression . DIVIDE expression
-    (11) expression -> expression . DOT expression
-    (12) expression -> expression . EQ expression
-    (13) expression -> expression . NEQ expression
-    (14) expression -> expression . GT expression
-    (15) expression -> expression . GTE expression
-    (16) expression -> expression . LT expression
-    (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (33) factor -> expression LPAREN argument_list . RPAREN
+    (34) argument_list -> argument_list . COMMA expression
 
-    $end            reduce using rule 26 (factor -> ID ASSIGN expression .)
-    RPAREN          reduce using rule 26 (factor -> ID ASSIGN expression .)
-    ESCAPE          reduce using rule 26 (factor -> ID ASSIGN expression .)
-    COMMA           reduce using rule 26 (factor -> ID ASSIGN expression .)
-    SEMICOLON       reduce using rule 26 (factor -> ID ASSIGN expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
-
-  ! PLUS            [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! MINUS           [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! TIMES           [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! DIVIDE          [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! DOT             [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! EQ              [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! NEQ             [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! GT              [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! GTE             [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! LT              [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! LTE             [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
-  ! LPAREN          [ reduce using rule 26 (factor -> ID ASSIGN expression .) ]
+    RPAREN          shift and go to state 56
+    COMMA           shift and go to state 57
 
 
 state 46
 
-    (23) factor -> LPAREN expression RPAREN .
+    (19) factor -> LPAREN expression RPAREN .
 
-    PLUS            reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    TIMES           reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    DOT             reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    EQ              reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    NEQ             reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    GT              reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    GTE             reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    LT              reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    LTE             reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    LPAREN          reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    $end            reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    ESCAPE          reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    COMMA           reduce using rule 23 (factor -> LPAREN expression RPAREN .)
-    SEMICOLON       reduce using rule 23 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    DOT             reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    EQ              reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    NEQ             reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    GT              reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    GTE             reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    LT              reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    LTE             reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    LPAREN          reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    $end            reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    ESCAPE          reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 19 (factor -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 19 (factor -> LPAREN expression RPAREN .)
 
 
 state 47
 
-    (24) factor -> ACTION LPAREN RPAREN . LBRACE statements RBRACE
-    (25) factor -> ACTION LPAREN RPAREN . ARROW expression
+    (20) factor -> ACTION LPAREN RPAREN . frame
+    (2) frame -> . LBRACE statements RBRACE
+    (3) frame -> . ARROW expression
 
-    LBRACE          shift and go to state 54
-    ARROW           shift and go to state 55
+    LBRACE          shift and go to state 59
+    ARROW           shift and go to state 60
 
+    frame                          shift and go to state 58
 
 state 48
 
-    (33) chase_with_escape -> CHASE catches escape .
+    (21) factor -> ACTION LPAREN params . RPAREN frame
+    (27) params -> params . COMMA param
 
-    PLUS            reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    MINUS           reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    TIMES           reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    DIVIDE          reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    DOT             reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    EQ              reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    NEQ             reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    GT              reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    GTE             reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    LT              reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    LTE             reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    LPAREN          reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    $end            reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    RPAREN          reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    ESCAPE          reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    COMMA           reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
-    SEMICOLON       reduce using rule 33 (chase_with_escape -> CHASE catches escape .)
+    RPAREN          shift and go to state 61
+    COMMA           shift and go to state 62
 
 
 state 49
 
-    (35) catches -> catches catch .
+    (28) params -> param .
 
-    ESCAPE          reduce using rule 35 (catches -> catches catch .)
-    LPAREN          reduce using rule 35 (catches -> catches catch .)
-    PLUS            reduce using rule 35 (catches -> catches catch .)
-    MINUS           reduce using rule 35 (catches -> catches catch .)
-    TIMES           reduce using rule 35 (catches -> catches catch .)
-    DIVIDE          reduce using rule 35 (catches -> catches catch .)
-    DOT             reduce using rule 35 (catches -> catches catch .)
-    EQ              reduce using rule 35 (catches -> catches catch .)
-    NEQ             reduce using rule 35 (catches -> catches catch .)
-    GT              reduce using rule 35 (catches -> catches catch .)
-    GTE             reduce using rule 35 (catches -> catches catch .)
-    LT              reduce using rule 35 (catches -> catches catch .)
-    LTE             reduce using rule 35 (catches -> catches catch .)
-    $end            reduce using rule 35 (catches -> catches catch .)
-    RPAREN          reduce using rule 35 (catches -> catches catch .)
-    COMMA           reduce using rule 35 (catches -> catches catch .)
-    SEMICOLON       reduce using rule 35 (catches -> catches catch .)
+    RPAREN          reduce using rule 28 (params -> param .)
+    COMMA           reduce using rule 28 (params -> param .)
 
 
 state 50
 
-    (38) escape -> ESCAPE . frame
-    (39) escape -> ESCAPE . LPAREN expression RPAREN frame
-    (2) frame -> . LBRACE statements RBRACE
-    (3) frame -> . ARROW expression
+    (29) param -> ID .
+    (30) param -> ID . ASSIGN scalar
 
-    LPAREN          shift and go to state 57
-    LBRACE          shift and go to state 58
-    ARROW           shift and go to state 59
+    RPAREN          reduce using rule 29 (param -> ID .)
+    COMMA           reduce using rule 29 (param -> ID .)
+    ASSIGN          shift and go to state 63
 
-    frame                          shift and go to state 56
 
 state 51
 
-    (37) catch -> LPAREN expression . RPAREN CATCH frame
+    (31) factor -> ID ASSIGN expression .
     (7) expression -> expression . PLUS expression
     (8) expression -> expression . MINUS expression
     (9) expression -> expression . TIMES expression
@@ -1931,207 +1922,158 @@ state 51
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
-    RPAREN          shift and go to state 60
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
+    $end            reduce using rule 31 (factor -> ID ASSIGN expression .)
+    RPAREN          reduce using rule 31 (factor -> ID ASSIGN expression .)
+    ESCAPE          reduce using rule 31 (factor -> ID ASSIGN expression .)
+    COMMA           reduce using rule 31 (factor -> ID ASSIGN expression .)
+    SEMICOLON       reduce using rule 31 (factor -> ID ASSIGN expression .)
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
+
+  ! PLUS            [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! MINUS           [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! TIMES           [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! DIVIDE          [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! DOT             [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! EQ              [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! NEQ             [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! GT              [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! GTE             [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! LT              [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! LTE             [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
+  ! LPAREN          [ reduce using rule 31 (factor -> ID ASSIGN expression .) ]
 
 
 state 52
 
-    (28) factor -> expression LPAREN argument_list RPAREN .
+    (38) chase_with_escape -> CHASE catches escape .
 
-    PLUS            reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    MINUS           reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    TIMES           reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    DIVIDE          reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    DOT             reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    EQ              reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    NEQ             reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    GT              reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    GTE             reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    LT              reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    LTE             reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    LPAREN          reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    $end            reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    RPAREN          reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    ESCAPE          reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    COMMA           reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
-    SEMICOLON       reduce using rule 28 (factor -> expression LPAREN argument_list RPAREN .)
+    PLUS            reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    MINUS           reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    TIMES           reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    DIVIDE          reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    DOT             reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    EQ              reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    NEQ             reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    GT              reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    GTE             reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    LT              reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    LTE             reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    LPAREN          reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    $end            reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    RPAREN          reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    ESCAPE          reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    COMMA           reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
+    SEMICOLON       reduce using rule 38 (chase_with_escape -> CHASE catches escape .)
 
 
 state 53
 
-    (29) argument_list -> argument_list COMMA . expression
-    (7) expression -> . expression PLUS expression
-    (8) expression -> . expression MINUS expression
-    (9) expression -> . expression TIMES expression
-    (10) expression -> . expression DIVIDE expression
-    (11) expression -> . expression DOT expression
-    (12) expression -> . expression EQ expression
-    (13) expression -> . expression NEQ expression
-    (14) expression -> . expression GT expression
-    (15) expression -> . expression GTE expression
-    (16) expression -> . expression LT expression
-    (17) expression -> . expression LTE expression
-    (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (40) catches -> catches catch .
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    ESCAPE          reduce using rule 40 (catches -> catches catch .)
+    LPAREN          reduce using rule 40 (catches -> catches catch .)
+    PLUS            reduce using rule 40 (catches -> catches catch .)
+    MINUS           reduce using rule 40 (catches -> catches catch .)
+    TIMES           reduce using rule 40 (catches -> catches catch .)
+    DIVIDE          reduce using rule 40 (catches -> catches catch .)
+    DOT             reduce using rule 40 (catches -> catches catch .)
+    EQ              reduce using rule 40 (catches -> catches catch .)
+    NEQ             reduce using rule 40 (catches -> catches catch .)
+    GT              reduce using rule 40 (catches -> catches catch .)
+    GTE             reduce using rule 40 (catches -> catches catch .)
+    LT              reduce using rule 40 (catches -> catches catch .)
+    LTE             reduce using rule 40 (catches -> catches catch .)
+    $end            reduce using rule 40 (catches -> catches catch .)
+    RPAREN          reduce using rule 40 (catches -> catches catch .)
+    COMMA           reduce using rule 40 (catches -> catches catch .)
+    SEMICOLON       reduce using rule 40 (catches -> catches catch .)
 
-    expression                     shift and go to state 61
-    factor                         shift and go to state 3
-    chase_with_escape              shift and go to state 4
-    chase_no_escape                shift and go to state 5
 
 state 54
 
-    (24) factor -> ACTION LPAREN RPAREN LBRACE . statements RBRACE
-    (4) statements -> . statements statement
-    (5) statements -> . statement
-    (6) statement -> . expression SEMICOLON
-    (7) expression -> . expression PLUS expression
-    (8) expression -> . expression MINUS expression
-    (9) expression -> . expression TIMES expression
-    (10) expression -> . expression DIVIDE expression
-    (11) expression -> . expression DOT expression
-    (12) expression -> . expression EQ expression
-    (13) expression -> . expression NEQ expression
-    (14) expression -> . expression GT expression
-    (15) expression -> . expression GTE expression
-    (16) expression -> . expression LT expression
-    (17) expression -> . expression LTE expression
-    (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (43) escape -> ESCAPE . frame
+    (44) escape -> ESCAPE . LPAREN expression RPAREN frame
+    (2) frame -> . LBRACE statements RBRACE
+    (3) frame -> . ARROW expression
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 65
+    LBRACE          shift and go to state 59
+    ARROW           shift and go to state 60
 
-    statements                     shift and go to state 62
-    statement                      shift and go to state 63
-    expression                     shift and go to state 64
-    factor                         shift and go to state 3
-    chase_with_escape              shift and go to state 4
-    chase_no_escape                shift and go to state 5
+    frame                          shift and go to state 64
 
 state 55
 
-    (25) factor -> ACTION LPAREN RPAREN ARROW . expression
-    (7) expression -> . expression PLUS expression
-    (8) expression -> . expression MINUS expression
-    (9) expression -> . expression TIMES expression
-    (10) expression -> . expression DIVIDE expression
-    (11) expression -> . expression DOT expression
-    (12) expression -> . expression EQ expression
-    (13) expression -> . expression NEQ expression
-    (14) expression -> . expression GT expression
-    (15) expression -> . expression GTE expression
-    (16) expression -> . expression LT expression
-    (17) expression -> . expression LTE expression
-    (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (42) catch -> LPAREN expression . RPAREN CATCH frame
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . TIMES expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . DOT expression
+    (12) expression -> expression . EQ expression
+    (13) expression -> expression . NEQ expression
+    (14) expression -> expression . GT expression
+    (15) expression -> expression . GTE expression
+    (16) expression -> expression . LT expression
+    (17) expression -> expression . LTE expression
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    RPAREN          shift and go to state 66
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
 
-    expression                     shift and go to state 65
-    factor                         shift and go to state 3
-    chase_with_escape              shift and go to state 4
-    chase_no_escape                shift and go to state 5
 
 state 56
 
-    (38) escape -> ESCAPE frame .
+    (33) factor -> expression LPAREN argument_list RPAREN .
 
-    ESCAPE          reduce using rule 38 (escape -> ESCAPE frame .)
-    LPAREN          reduce using rule 38 (escape -> ESCAPE frame .)
-    PLUS            reduce using rule 38 (escape -> ESCAPE frame .)
-    MINUS           reduce using rule 38 (escape -> ESCAPE frame .)
-    TIMES           reduce using rule 38 (escape -> ESCAPE frame .)
-    DIVIDE          reduce using rule 38 (escape -> ESCAPE frame .)
-    DOT             reduce using rule 38 (escape -> ESCAPE frame .)
-    EQ              reduce using rule 38 (escape -> ESCAPE frame .)
-    NEQ             reduce using rule 38 (escape -> ESCAPE frame .)
-    GT              reduce using rule 38 (escape -> ESCAPE frame .)
-    GTE             reduce using rule 38 (escape -> ESCAPE frame .)
-    LT              reduce using rule 38 (escape -> ESCAPE frame .)
-    LTE             reduce using rule 38 (escape -> ESCAPE frame .)
-    $end            reduce using rule 38 (escape -> ESCAPE frame .)
-    RPAREN          reduce using rule 38 (escape -> ESCAPE frame .)
-    COMMA           reduce using rule 38 (escape -> ESCAPE frame .)
-    SEMICOLON       reduce using rule 38 (escape -> ESCAPE frame .)
+    PLUS            reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    MINUS           reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    TIMES           reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    DIVIDE          reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    DOT             reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    EQ              reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    NEQ             reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    GT              reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    GTE             reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    LT              reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    LTE             reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    LPAREN          reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    $end            reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    RPAREN          reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    ESCAPE          reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    COMMA           reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
+    SEMICOLON       reduce using rule 33 (factor -> expression LPAREN argument_list RPAREN .)
 
 
 state 57
 
-    (39) escape -> ESCAPE LPAREN . expression RPAREN frame
+    (34) argument_list -> argument_list COMMA . expression
     (7) expression -> . expression PLUS expression
     (8) expression -> . expression MINUS expression
     (9) expression -> . expression TIMES expression
@@ -2144,35 +2086,60 @@ state 57
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 66
+    expression                     shift and go to state 67
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
 state 58
+
+    (20) factor -> ACTION LPAREN RPAREN frame .
+
+    PLUS            reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    MINUS           reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    TIMES           reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    DIVIDE          reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    DOT             reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    EQ              reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    NEQ             reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    GT              reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    GTE             reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    LT              reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    LTE             reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    LPAREN          reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    $end            reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    RPAREN          reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    ESCAPE          reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    COMMA           reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+    SEMICOLON       reduce using rule 20 (factor -> ACTION LPAREN RPAREN frame .)
+
+
+state 59
 
     (2) frame -> LBRACE . statements RBRACE
     (4) statements -> . statements statement
@@ -2190,37 +2157,39 @@ state 58
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    statements                     shift and go to state 67
-    statement                      shift and go to state 63
-    expression                     shift and go to state 64
+    statements                     shift and go to state 68
+    statement                      shift and go to state 69
+    expression                     shift and go to state 70
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 59
+state 60
 
     (3) frame -> ARROW . expression
     (7) expression -> . expression PLUS expression
@@ -2235,79 +2204,98 @@ state 59
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    expression                     shift and go to state 68
+    expression                     shift and go to state 71
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
-
-state 60
-
-    (37) catch -> LPAREN expression RPAREN . CATCH frame
-
-    CATCH           shift and go to state 69
-
+    scalar                         shift and go to state 8
 
 state 61
 
-    (29) argument_list -> argument_list COMMA expression .
-    (7) expression -> expression . PLUS expression
-    (8) expression -> expression . MINUS expression
-    (9) expression -> expression . TIMES expression
-    (10) expression -> expression . DIVIDE expression
-    (11) expression -> expression . DOT expression
-    (12) expression -> expression . EQ expression
-    (13) expression -> expression . NEQ expression
-    (14) expression -> expression . GT expression
-    (15) expression -> expression . GTE expression
-    (16) expression -> expression . LT expression
-    (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (21) factor -> ACTION LPAREN params RPAREN . frame
+    (2) frame -> . LBRACE statements RBRACE
+    (3) frame -> . ARROW expression
 
-    RPAREN          reduce using rule 29 (argument_list -> argument_list COMMA expression .)
-    COMMA           reduce using rule 29 (argument_list -> argument_list COMMA expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
+    LBRACE          shift and go to state 59
+    ARROW           shift and go to state 60
 
+    frame                          shift and go to state 72
 
 state 62
 
-    (24) factor -> ACTION LPAREN RPAREN LBRACE statements . RBRACE
-    (4) statements -> statements . statement
-    (6) statement -> . expression SEMICOLON
+    (27) params -> params COMMA . param
+    (29) param -> . ID
+    (30) param -> . ID ASSIGN scalar
+
+    ID              shift and go to state 50
+
+    param                          shift and go to state 73
+
+state 63
+
+    (30) param -> ID ASSIGN . scalar
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
+
+    NUMBER          shift and go to state 11
+    ID              shift and go to state 74
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
+
+    scalar                         shift and go to state 75
+
+state 64
+
+    (43) escape -> ESCAPE frame .
+
+    ESCAPE          reduce using rule 43 (escape -> ESCAPE frame .)
+    LPAREN          reduce using rule 43 (escape -> ESCAPE frame .)
+    PLUS            reduce using rule 43 (escape -> ESCAPE frame .)
+    MINUS           reduce using rule 43 (escape -> ESCAPE frame .)
+    TIMES           reduce using rule 43 (escape -> ESCAPE frame .)
+    DIVIDE          reduce using rule 43 (escape -> ESCAPE frame .)
+    DOT             reduce using rule 43 (escape -> ESCAPE frame .)
+    EQ              reduce using rule 43 (escape -> ESCAPE frame .)
+    NEQ             reduce using rule 43 (escape -> ESCAPE frame .)
+    GT              reduce using rule 43 (escape -> ESCAPE frame .)
+    GTE             reduce using rule 43 (escape -> ESCAPE frame .)
+    LT              reduce using rule 43 (escape -> ESCAPE frame .)
+    LTE             reduce using rule 43 (escape -> ESCAPE frame .)
+    $end            reduce using rule 43 (escape -> ESCAPE frame .)
+    RPAREN          reduce using rule 43 (escape -> ESCAPE frame .)
+    COMMA           reduce using rule 43 (escape -> ESCAPE frame .)
+    SEMICOLON       reduce using rule 43 (escape -> ESCAPE frame .)
+
+
+state 65
+
+    (44) escape -> ESCAPE LPAREN . expression RPAREN frame
     (7) expression -> . expression PLUS expression
     (8) expression -> . expression MINUS expression
     (9) expression -> . expression TIMES expression
@@ -2320,134 +2308,46 @@ state 62
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    RBRACE          shift and go to state 70
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    statement                      shift and go to state 71
-    expression                     shift and go to state 64
+    expression                     shift and go to state 76
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
-
-state 63
-
-    (5) statements -> statement .
-
-    RBRACE          reduce using rule 5 (statements -> statement .)
-    NUMBER          reduce using rule 5 (statements -> statement .)
-    ID              reduce using rule 5 (statements -> statement .)
-    CHAR            reduce using rule 5 (statements -> statement .)
-    STRING          reduce using rule 5 (statements -> statement .)
-    LPAREN          reduce using rule 5 (statements -> statement .)
-    ACTION          reduce using rule 5 (statements -> statement .)
-    CHASE           reduce using rule 5 (statements -> statement .)
-
-
-state 64
-
-    (6) statement -> expression . SEMICOLON
-    (7) expression -> expression . PLUS expression
-    (8) expression -> expression . MINUS expression
-    (9) expression -> expression . TIMES expression
-    (10) expression -> expression . DIVIDE expression
-    (11) expression -> expression . DOT expression
-    (12) expression -> expression . EQ expression
-    (13) expression -> expression . NEQ expression
-    (14) expression -> expression . GT expression
-    (15) expression -> expression . GTE expression
-    (16) expression -> expression . LT expression
-    (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
-
-    SEMICOLON       shift and go to state 72
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
-
-
-state 65
-
-    (25) factor -> ACTION LPAREN RPAREN ARROW expression .
-    (7) expression -> expression . PLUS expression
-    (8) expression -> expression . MINUS expression
-    (9) expression -> expression . TIMES expression
-    (10) expression -> expression . DIVIDE expression
-    (11) expression -> expression . DOT expression
-    (12) expression -> expression . EQ expression
-    (13) expression -> expression . NEQ expression
-    (14) expression -> expression . GT expression
-    (15) expression -> expression . GTE expression
-    (16) expression -> expression . LT expression
-    (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
-
-    $end            reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .)
-    RPAREN          reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .)
-    ESCAPE          reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .)
-    COMMA           reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .)
-    SEMICOLON       reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
-
-  ! PLUS            [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! MINUS           [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! TIMES           [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! DIVIDE          [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! DOT             [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! EQ              [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! NEQ             [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! GT              [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! GTE             [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! LT              [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! LTE             [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-  ! LPAREN          [ reduce using rule 25 (factor -> ACTION LPAREN RPAREN ARROW expression .) ]
-
+    scalar                         shift and go to state 8
 
 state 66
 
-    (39) escape -> ESCAPE LPAREN expression . RPAREN frame
+    (42) catch -> LPAREN expression RPAREN . CATCH frame
+
+    CATCH           shift and go to state 77
+
+
+state 67
+
+    (34) argument_list -> argument_list COMMA expression .
     (7) expression -> expression . PLUS expression
     (8) expression -> expression . MINUS expression
     (9) expression -> expression . TIMES expression
@@ -2459,25 +2359,26 @@ state 66
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
-    RPAREN          shift and go to state 73
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
+    RPAREN          reduce using rule 34 (argument_list -> argument_list COMMA expression .)
+    COMMA           reduce using rule 34 (argument_list -> argument_list COMMA expression .)
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
 
 
-state 67
+state 68
 
     (2) frame -> LBRACE statements . RBRACE
     (4) statements -> statements . statement
@@ -2494,37 +2395,85 @@ state 67
     (16) expression -> . expression LT expression
     (17) expression -> . expression LTE expression
     (18) expression -> . factor
-    (31) expression -> . chase_with_escape
-    (32) expression -> . chase_no_escape
-    (19) factor -> . NUMBER
-    (20) factor -> . ID
-    (21) factor -> . CHAR
-    (22) factor -> . STRING
-    (23) factor -> . LPAREN expression RPAREN
-    (24) factor -> . ACTION LPAREN RPAREN LBRACE statements RBRACE
-    (25) factor -> . ACTION LPAREN RPAREN ARROW expression
-    (26) factor -> . ID ASSIGN expression
-    (27) factor -> . expression LPAREN RPAREN
-    (28) factor -> . expression LPAREN argument_list RPAREN
-    (33) chase_with_escape -> . CHASE catches escape
-    (34) chase_no_escape -> . CHASE catches
+    (36) expression -> . chase_with_escape
+    (37) expression -> . chase_no_escape
+    (19) factor -> . LPAREN expression RPAREN
+    (20) factor -> . ACTION LPAREN RPAREN frame
+    (21) factor -> . ACTION LPAREN params RPAREN frame
+    (22) factor -> . scalar
+    (31) factor -> . ID ASSIGN expression
+    (32) factor -> . expression LPAREN RPAREN
+    (33) factor -> . expression LPAREN argument_list RPAREN
+    (38) chase_with_escape -> . CHASE catches escape
+    (39) chase_no_escape -> . CHASE catches
+    (23) scalar -> . NUMBER
+    (24) scalar -> . ID
+    (25) scalar -> . CHAR
+    (26) scalar -> . STRING
 
-    RBRACE          shift and go to state 74
-    NUMBER          shift and go to state 6
-    ID              shift and go to state 7
-    CHAR            shift and go to state 8
-    STRING          shift and go to state 9
-    LPAREN          shift and go to state 10
-    ACTION          shift and go to state 11
-    CHASE           shift and go to state 12
+    RBRACE          shift and go to state 78
+    LPAREN          shift and go to state 6
+    ACTION          shift and go to state 7
+    ID              shift and go to state 9
+    CHASE           shift and go to state 10
+    NUMBER          shift and go to state 11
+    CHAR            shift and go to state 12
+    STRING          shift and go to state 13
 
-    statement                      shift and go to state 71
-    expression                     shift and go to state 64
+    statement                      shift and go to state 79
+    expression                     shift and go to state 70
     factor                         shift and go to state 3
     chase_with_escape              shift and go to state 4
     chase_no_escape                shift and go to state 5
+    scalar                         shift and go to state 8
 
-state 68
+state 69
+
+    (5) statements -> statement .
+
+    RBRACE          reduce using rule 5 (statements -> statement .)
+    LPAREN          reduce using rule 5 (statements -> statement .)
+    ACTION          reduce using rule 5 (statements -> statement .)
+    ID              reduce using rule 5 (statements -> statement .)
+    CHASE           reduce using rule 5 (statements -> statement .)
+    NUMBER          reduce using rule 5 (statements -> statement .)
+    CHAR            reduce using rule 5 (statements -> statement .)
+    STRING          reduce using rule 5 (statements -> statement .)
+
+
+state 70
+
+    (6) statement -> expression . SEMICOLON
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . TIMES expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . DOT expression
+    (12) expression -> expression . EQ expression
+    (13) expression -> expression . NEQ expression
+    (14) expression -> expression . GT expression
+    (15) expression -> expression . GTE expression
+    (16) expression -> expression . LT expression
+    (17) expression -> expression . LTE expression
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
+
+    SEMICOLON       shift and go to state 80
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
+
+
+state 71
 
     (3) frame -> ARROW expression .
     (7) expression -> expression . PLUS expression
@@ -2538,26 +2487,26 @@ state 68
     (15) expression -> expression . GTE expression
     (16) expression -> expression . LT expression
     (17) expression -> expression . LTE expression
-    (27) factor -> expression . LPAREN RPAREN
-    (28) factor -> expression . LPAREN argument_list RPAREN
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
 
     ESCAPE          reduce using rule 3 (frame -> ARROW expression .)
     $end            reduce using rule 3 (frame -> ARROW expression .)
     RPAREN          reduce using rule 3 (frame -> ARROW expression .)
     COMMA           reduce using rule 3 (frame -> ARROW expression .)
     SEMICOLON       reduce using rule 3 (frame -> ARROW expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    DOT             shift and go to state 17
-    EQ              shift and go to state 18
-    NEQ             shift and go to state 19
-    GT              shift and go to state 20
-    GTE             shift and go to state 21
-    LT              shift and go to state 22
-    LTE             shift and go to state 23
-    LPAREN          shift and go to state 24
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
 
   ! LPAREN          [ reduce using rule 3 (frame -> ARROW expression .) ]
   ! PLUS            [ reduce using rule 3 (frame -> ARROW expression .) ]
@@ -2573,80 +2522,97 @@ state 68
   ! LTE             [ reduce using rule 3 (frame -> ARROW expression .) ]
 
 
-state 69
-
-    (37) catch -> LPAREN expression RPAREN CATCH . frame
-    (2) frame -> . LBRACE statements RBRACE
-    (3) frame -> . ARROW expression
-
-    LBRACE          shift and go to state 58
-    ARROW           shift and go to state 59
-
-    frame                          shift and go to state 75
-
-state 70
-
-    (24) factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .
-
-    PLUS            reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    MINUS           reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    TIMES           reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    DIVIDE          reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    DOT             reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    EQ              reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    NEQ             reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    GT              reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    GTE             reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    LT              reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    LTE             reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    LPAREN          reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    $end            reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    RPAREN          reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    ESCAPE          reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    COMMA           reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-    SEMICOLON       reduce using rule 24 (factor -> ACTION LPAREN RPAREN LBRACE statements RBRACE .)
-
-
-state 71
-
-    (4) statements -> statements statement .
-
-    RBRACE          reduce using rule 4 (statements -> statements statement .)
-    NUMBER          reduce using rule 4 (statements -> statements statement .)
-    ID              reduce using rule 4 (statements -> statements statement .)
-    CHAR            reduce using rule 4 (statements -> statements statement .)
-    STRING          reduce using rule 4 (statements -> statements statement .)
-    LPAREN          reduce using rule 4 (statements -> statements statement .)
-    ACTION          reduce using rule 4 (statements -> statements statement .)
-    CHASE           reduce using rule 4 (statements -> statements statement .)
-
-
 state 72
 
-    (6) statement -> expression SEMICOLON .
+    (21) factor -> ACTION LPAREN params RPAREN frame .
 
-    RBRACE          reduce using rule 6 (statement -> expression SEMICOLON .)
-    NUMBER          reduce using rule 6 (statement -> expression SEMICOLON .)
-    ID              reduce using rule 6 (statement -> expression SEMICOLON .)
-    CHAR            reduce using rule 6 (statement -> expression SEMICOLON .)
-    STRING          reduce using rule 6 (statement -> expression SEMICOLON .)
-    LPAREN          reduce using rule 6 (statement -> expression SEMICOLON .)
-    ACTION          reduce using rule 6 (statement -> expression SEMICOLON .)
-    CHASE           reduce using rule 6 (statement -> expression SEMICOLON .)
+    PLUS            reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    MINUS           reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    TIMES           reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    DIVIDE          reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    DOT             reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    EQ              reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    NEQ             reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    GT              reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    GTE             reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    LT              reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    LTE             reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    LPAREN          reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    $end            reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    RPAREN          reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    ESCAPE          reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    COMMA           reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
+    SEMICOLON       reduce using rule 21 (factor -> ACTION LPAREN params RPAREN frame .)
 
 
 state 73
 
-    (39) escape -> ESCAPE LPAREN expression RPAREN . frame
+    (27) params -> params COMMA param .
+
+    RPAREN          reduce using rule 27 (params -> params COMMA param .)
+    COMMA           reduce using rule 27 (params -> params COMMA param .)
+
+
+state 74
+
+    (24) scalar -> ID .
+
+    RPAREN          reduce using rule 24 (scalar -> ID .)
+    COMMA           reduce using rule 24 (scalar -> ID .)
+
+
+state 75
+
+    (30) param -> ID ASSIGN scalar .
+
+    RPAREN          reduce using rule 30 (param -> ID ASSIGN scalar .)
+    COMMA           reduce using rule 30 (param -> ID ASSIGN scalar .)
+
+
+state 76
+
+    (44) escape -> ESCAPE LPAREN expression . RPAREN frame
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . TIMES expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . DOT expression
+    (12) expression -> expression . EQ expression
+    (13) expression -> expression . NEQ expression
+    (14) expression -> expression . GT expression
+    (15) expression -> expression . GTE expression
+    (16) expression -> expression . LT expression
+    (17) expression -> expression . LTE expression
+    (32) factor -> expression . LPAREN RPAREN
+    (33) factor -> expression . LPAREN argument_list RPAREN
+
+    RPAREN          shift and go to state 81
+    PLUS            shift and go to state 14
+    MINUS           shift and go to state 15
+    TIMES           shift and go to state 16
+    DIVIDE          shift and go to state 17
+    DOT             shift and go to state 18
+    EQ              shift and go to state 19
+    NEQ             shift and go to state 20
+    GT              shift and go to state 21
+    GTE             shift and go to state 22
+    LT              shift and go to state 23
+    LTE             shift and go to state 24
+    LPAREN          shift and go to state 25
+
+
+state 77
+
+    (42) catch -> LPAREN expression RPAREN CATCH . frame
     (2) frame -> . LBRACE statements RBRACE
     (3) frame -> . ARROW expression
 
-    LBRACE          shift and go to state 58
-    ARROW           shift and go to state 59
+    LBRACE          shift and go to state 59
+    ARROW           shift and go to state 60
 
-    frame                          shift and go to state 76
+    frame                          shift and go to state 82
 
-state 74
+state 78
 
     (2) frame -> LBRACE statements RBRACE .
 
@@ -2669,48 +2635,87 @@ state 74
     SEMICOLON       reduce using rule 2 (frame -> LBRACE statements RBRACE .)
 
 
-state 75
+state 79
 
-    (37) catch -> LPAREN expression RPAREN CATCH frame .
+    (4) statements -> statements statement .
 
-    ESCAPE          reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    LPAREN          reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    PLUS            reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    MINUS           reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    TIMES           reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    DIVIDE          reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    DOT             reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    EQ              reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    NEQ             reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    GT              reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    GTE             reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    LT              reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    LTE             reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    $end            reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    RPAREN          reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    COMMA           reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
-    SEMICOLON       reduce using rule 37 (catch -> LPAREN expression RPAREN CATCH frame .)
+    RBRACE          reduce using rule 4 (statements -> statements statement .)
+    LPAREN          reduce using rule 4 (statements -> statements statement .)
+    ACTION          reduce using rule 4 (statements -> statements statement .)
+    ID              reduce using rule 4 (statements -> statements statement .)
+    CHASE           reduce using rule 4 (statements -> statements statement .)
+    NUMBER          reduce using rule 4 (statements -> statements statement .)
+    CHAR            reduce using rule 4 (statements -> statements statement .)
+    STRING          reduce using rule 4 (statements -> statements statement .)
 
 
-state 76
+state 80
 
-    (39) escape -> ESCAPE LPAREN expression RPAREN frame .
+    (6) statement -> expression SEMICOLON .
 
-    ESCAPE          reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    LPAREN          reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    PLUS            reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    MINUS           reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    TIMES           reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    DIVIDE          reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    DOT             reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    EQ              reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    NEQ             reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    GT              reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    GTE             reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    LT              reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    LTE             reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    $end            reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    RPAREN          reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    COMMA           reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
-    SEMICOLON       reduce using rule 39 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    RBRACE          reduce using rule 6 (statement -> expression SEMICOLON .)
+    LPAREN          reduce using rule 6 (statement -> expression SEMICOLON .)
+    ACTION          reduce using rule 6 (statement -> expression SEMICOLON .)
+    ID              reduce using rule 6 (statement -> expression SEMICOLON .)
+    CHASE           reduce using rule 6 (statement -> expression SEMICOLON .)
+    NUMBER          reduce using rule 6 (statement -> expression SEMICOLON .)
+    CHAR            reduce using rule 6 (statement -> expression SEMICOLON .)
+    STRING          reduce using rule 6 (statement -> expression SEMICOLON .)
+
+
+state 81
+
+    (44) escape -> ESCAPE LPAREN expression RPAREN . frame
+    (2) frame -> . LBRACE statements RBRACE
+    (3) frame -> . ARROW expression
+
+    LBRACE          shift and go to state 59
+    ARROW           shift and go to state 60
+
+    frame                          shift and go to state 83
+
+state 82
+
+    (42) catch -> LPAREN expression RPAREN CATCH frame .
+
+    ESCAPE          reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    LPAREN          reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    PLUS            reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    MINUS           reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    TIMES           reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    DIVIDE          reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    DOT             reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    EQ              reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    NEQ             reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    GT              reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    GTE             reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    LT              reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    LTE             reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    $end            reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    RPAREN          reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    COMMA           reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+    SEMICOLON       reduce using rule 42 (catch -> LPAREN expression RPAREN CATCH frame .)
+
+
+state 83
+
+    (44) escape -> ESCAPE LPAREN expression RPAREN frame .
+
+    ESCAPE          reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    LPAREN          reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    PLUS            reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    MINUS           reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    TIMES           reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    DIVIDE          reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    DOT             reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    EQ              reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    NEQ             reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    GT              reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    GTE             reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    LT              reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    LTE             reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    $end            reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    RPAREN          reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    COMMA           reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
+    SEMICOLON       reduce using rule 44 (escape -> ESCAPE LPAREN expression RPAREN frame .)
 

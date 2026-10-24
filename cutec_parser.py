@@ -98,33 +98,53 @@ def p_expression_factor(p):
     'expression : factor'
     p[0] = p[1]
 
-def p_factor_num(p):
-    'factor : NUMBER'
-    p[0] = ScalarNode('number', p[1])
-
-def p_factor_id(p):
-    'factor : ID'
-    p[0] = p[1]
-
-def p_factor_char(p):
-    'factor : CHAR'
-    p[0] = ScalarNode('char', p[1])
-
-def p_factor_string(p):
-    'factor : STRING'
-    p[0] = ScalarNode('string', p[1])
-
 def p_factor_expr(p):
     'factor : LPAREN expression RPAREN'
     p[0] = p[2]
 
 def p_factor_action(p):
-    'factor :  ACTION LPAREN RPAREN LBRACE statements RBRACE'
+    'factor :  ACTION LPAREN RPAREN frame'
     p[0] = ActionNode(p[5])
 
-def p_factor_action_lambda(p):
-    'factor :  ACTION LPAREN RPAREN ARROW expression'
-    p[0] = ActionNode(FrameNode([p[5]]))
+def p_factor_action_with_params(p):
+    'factor :  ACTION LPAREN params RPAREN frame'
+    p[0] = ActionNode(p[5])
+
+def p_factor_scalar(p):
+    'factor : scalar'
+    p[0] = p[1]
+
+def p_factor_num(p):
+    'scalar : NUMBER'
+    p[0] = ScalarNode('number', p[1])
+
+def p_factor_id(p):
+    'scalar : ID'
+    p[0] = p[1]
+
+def p_factor_char(p):
+    'scalar : CHAR'
+    p[0] = ScalarNode('char', p[1])
+
+def p_factor_string(p):
+    'scalar : STRING'
+    p[0] = ScalarNode('string', p[1])
+
+def p_params(p):
+    'params : params COMMA param'
+    p[0] = p[1] + [p[3]]
+
+def p_params_single(p):
+    'params : param'
+    p[0] = [p[1]]
+
+def p_param(p):
+    'param : ID'
+    p[0] = [p[1]]
+
+def p_param_with_default(p):
+    'param : ID ASSIGN scalar'
+    p[0] = [p[1]]
 
 def p_factor_assign(p):
     'factor : ID ASSIGN expression'
@@ -132,7 +152,7 @@ def p_factor_assign(p):
 
 def p_factor_call_empty(p):
     'factor : expression LPAREN RPAREN'
-    p[0] = CallNode(p[1], p[3])
+    p[0] = CallNode(p[1])
 
 def p_factor_call_list(p):
     'factor : expression LPAREN argument_list RPAREN'
@@ -146,11 +166,11 @@ def p_argument_list_expression(p):
     'argument_list : expression'
     p[0] = [p[1]]
 
-def p_expression_chase1(p):
+def p_expression_chase_with_escape(p):
     'expression : chase_with_escape'
     p[0] = p[1]
 
-def p_expression_chase2(p):
+def p_expression_chase_no_escape(p):
     'expression : chase_no_escape'
     p[0] = p[1]
 

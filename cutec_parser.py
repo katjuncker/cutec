@@ -8,6 +8,7 @@ from cutec_ast.catch_node import CatchNode
 from cutec_ast.escape_node import EscapeNode
 from cutec_ast.frame_node import FrameNode
 from cutec_ast.chase_node import ChaseNode
+from cutec_ast.param_node import ParamNode
 from cutec_ast.scalar_node import ScalarNode
 from cutec_lexer import CuteLexer
 
@@ -140,11 +141,11 @@ def p_params_single(p):
 
 def p_param(p):
     'param : ID'
-    p[0] = [p[1]]
+    p[0] = ParamNode(p[1])
 
 def p_param_with_default(p):
     'param : ID ASSIGN scalar'
-    p[0] = [p[1]]
+    p[0] = ParamNode(p[1], p[3])
 
 def p_factor_assign(p):
     'factor : ID ASSIGN expression'

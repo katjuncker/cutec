@@ -23,6 +23,7 @@ Unused terminals:
     MEM
     NOT
     OF
+    OOPS
     OR
     PIPE
     RBRACKET
@@ -128,6 +129,7 @@ NEQ                  : 13
 NOT                  : 
 NUMBER               : 23
 OF                   : 
+OOPS                 : 
 OR                   : 
 PIPE                 : 
 PLUS                 : 7

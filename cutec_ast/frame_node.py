@@ -8,3 +8,6 @@ class FrameNode(Node):
             nodes = []
         self.nodes = nodes
         super().__init__()
+
+    def __str__(self) -> str:
+        return '{\n' + ''.join(['\t' + str(n) + '\n' for n in self.nodes]) + '}'

@@ -8,3 +8,6 @@ class ScalarNode(Node):
         self.data_type = data_type
         self.value = value
         super().__init__()
+
+    def __str__(self) -> str:
+        return self.data_type + '(' + str(self.value) + ')'

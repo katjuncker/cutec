@@ -10,3 +10,9 @@ class ParamNode(Node):
         self.name = name
         self.value = value
         super().__init__()
+
+    def __str__(self) -> str:
+        if self.value:
+            return self.name + '=' + str(self.value)
+        else:
+            return self.name

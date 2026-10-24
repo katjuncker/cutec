@@ -8,3 +8,10 @@ class ChaseNode(Node):
         self.catches = catches
         self.escape = escape
         super().__init__()
+
+    def __str__(self) -> str:
+        catches_str = ''.join(['\t' + str(c) + '\n' for c in self.catches])
+        if self.escape:
+            return 'chase\n' + catches_str + str(self.escape)
+        else:
+            return 'chase\n' + catches_str

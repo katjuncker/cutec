@@ -70,7 +70,7 @@ def p_expression_divide(p):
     p[0] = BinOp('/', p[1], p[3])
 
 def p_expression_dot(p):
-    'expression : expression DOT expression'
+    'expression : expression DOT ID'
     p[0] = BinOp('.', p[1], p[3])
 
 def p_expression_eq(p):
@@ -164,6 +164,10 @@ def p_param_with_default(p):
 def p_factor_assign(p):
     'factor : ID ASSIGN expression'
     p[0] = AssignNode(p[1], p[3])
+
+def p_factor_object_assign(p):
+    'factor : expression DOT ID ASSIGN expression'
+    p[0] = AssignNode(p[3], p[5], p[1])
 
 def p_factor_call_empty(p):
     'factor : expression LPAREN RPAREN'

@@ -8,3 +8,6 @@ class CatchNode(Node):
         self.condition = condition
         self.action = action
         super().__init__()
+
+    def __str__(self) -> str:
+        return '(' + str(self.condition) + ') ' + str(self.action)

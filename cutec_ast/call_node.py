@@ -10,3 +10,7 @@ class CallNode(Node):
             arguments = []
         self.arguments = arguments
         super().__init__()
+
+    def __str__(self) -> str:
+        arg_str = ', '.join([str(arg) for arg in self.arguments])
+        return '( ' + str(self.action) + '(' + arg_str + ')' + ' )'

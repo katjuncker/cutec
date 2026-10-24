@@ -12,3 +12,12 @@ class ActionNode(Node):
         self.params = params
         self.frame = frame
         super().__init__()
+
+    def __str__(self) -> str:
+        param_str = ', '.join([str(p) for p in self.params])
+        frame_str = str(self.frame)
+        return f"""( action ({param_str}) {{
+{frame_str}
+}} )
+"""
+

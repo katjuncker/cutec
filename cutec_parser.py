@@ -8,6 +8,8 @@ from cutec_ast.catch_node import CatchNode
 from cutec_ast.escape_node import EscapeNode
 from cutec_ast.frame_node import FrameNode
 from cutec_ast.chase_node import ChaseNode
+from cutec_ast.id_node import IdNode
+from cutec_ast.node import Node
 from cutec_ast.param_node import ParamNode
 from cutec_ast.scalar_node import ScalarNode
 from cutec_ast.unary_op import UnaryOp
@@ -17,14 +19,15 @@ from cutec_lexer import CuteLexer
 tokens = CuteLexer.tokens
 
 precedence = (
-    ('left', 'CHASE'),  # Lowest precedence
+    ('left', 'ARROW'),  # Lowest precedence
     ('left', 'ESCAPE'),
     ('right', 'ASSIGN'),
     ('right', 'ARROW'),             # Lowest: allows the lambda body to stretch as far as possible
     ('left', 'OR', 'AND', 'NOT'),
     ('left', 'EQ', 'NEQ', 'LTE', 'LT', 'GT', 'GTE'),
     ('left', 'PLUS', 'MINUS'),    # Medium: standard math addition/subtraction
-    ('left', 'TIMES', 'DIVIDE'),  # High: multiplication/division bind tighter
+    ('left', 'TIMES', 'DIVIDE', 'MOD'),  # High: multiplication/division bind tighter
+    ('left', 'POW'),
     ('left', 'LPAREN'),
     ('left', 'DOT')
 )
@@ -33,13 +36,6 @@ def p_cutec(p):
     'cutec : expression'
     p[0] = p[1]
 
-def p_frame(p):
-    'frame : LBRACE statements RBRACE'
-    p[0] = FrameNode(p[2])
-
-def p_frame_expr(p):
-    'frame : ARROW expression'
-    p[0] = FrameNode([p[2]])
 
 def p_statements_list(p):
     'statements : statements statement'
@@ -68,6 +64,14 @@ def p_expression_times(p):
 def p_expression_divide(p):
     'expression : expression DIVIDE expression'
     p[0] = BinOp('/', p[1], p[3])
+
+def p_expression_mod(p):
+    'expression : expression MOD expression'
+    p[0] = BinOp('%', p[1], p[3])
+
+def p_expression_pow(p):
+    'expression : expression POW expression'
+    p[0] = BinOp('^', p[1], p[3])
 
 def p_expression_dot(p):
     'expression : expression DOT ID'
@@ -118,11 +122,11 @@ def p_factor_expr(p):
     p[0] = p[2]
 
 def p_factor_action(p):
-    'factor :  ACTION LPAREN RPAREN frame'
+    'factor :  ACTION LPAREN RPAREN ARROW expression'
     p[0] = ActionNode(p[5])
 
 def p_factor_action_with_params(p):
-    'factor :  ACTION LPAREN params RPAREN frame'
+    'factor :  ACTION LPAREN params RPAREN ARROW expression'
     p[0] = ActionNode(p[5])
 
 def p_factor_scalar(p):
@@ -135,7 +139,7 @@ def p_factor_num(p):
 
 def p_factor_id(p):
     'scalar : ID'
-    p[0] = p[1]
+    p[0] = IdNode(p[1])
 
 def p_factor_char(p):
     'scalar : CHAR'
@@ -194,34 +198,38 @@ def p_expression_chase_no_escape(p):
     p[0] = p[1]
 
 def p_chase_with_escape(p):
-    'chase_with_escape : CHASE catches escape'
+    'chase_with_escape : CHASE LPAREN catches escape RPAREN'
     # Combine catches and the explicit escape clause here
-    p[0] = ChaseNode(p[2], p[3])
+    p[0] = ChaseNode(p[3], p[4])
 
 def p_chase_no_escape(p):
-    'chase_no_escape : CHASE catches'
+    'chase_no_escape : CHASE LPAREN catches RPAREN'
     # Default case when no escape block is specified
-    p[0] = ChaseNode(p[2])
+    p[0] = ChaseNode(p[3])
 
 def p_catches_multi(p):
-    'catches : catches catch'
-    p[0] = p[1] + [p[2]]
+    'catches : catches COMMA catch'
+    p[0] = p[1] + [p[3]]
 
 def p_catches_catch(p):
     'catches : catch'
     p[0] = [p[1]]
 
 def p_catch(p):
-    'catch : LPAREN expression RPAREN CATCH frame'
-    p[0] = CatchNode(p[2], p[5])
+    'catch : expression ARROW expression'
+    p[0] = CatchNode(p[1], p[3])
 
 def p_escape(p):
-    'escape : ESCAPE frame'
-    p[0] = EscapeNode(ScalarNode('number', 0), p[2])
+    'escape : ESCAPE ARROW expression'
+    p[0] = EscapeNode(ScalarNode('number', 0), p[3])
 
 def p_escape_timeout(p):
-    'escape : ESCAPE LPAREN expression RPAREN frame'
-    p[0] = EscapeNode(p[3], p[5])
+    'escape : ESCAPE LPAREN expression RPAREN ARROW expression'
+    p[0] = EscapeNode(p[3], p[6])
+
+def p_expr_frame(p):
+    'expression : LBRACE statements RBRACE'
+    p[0] = FrameNode(p[2])
 
 def p_empty(p):
     'empty :'
@@ -229,37 +237,27 @@ def p_empty(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    print("Syntax error in input!")
+    if p:
+        print(f"Syntax error at token: {p.type}, value: {p.value!r}")
+        print(f"Line: {p.lineno}, position: {p.lexpos}")
+    else:
+        print("Syntax error at EOF")
 
-# Build the lexer
-lexer = CuteLexer()
-lexer.build()
+# # Build the lexer
+# lexer = CuteLexer()
+# lexer.build()
+#
+# # Build the parser
+# parser = yacc.yacc()
 
-# Build the parser
-parser = yacc.yacc()
+class CutecParser:
+    def __init__(self):
+        # Build the lexer
+        self.lexer = CuteLexer()
+        self.lexer.build()
 
-valid_program = """
-chase
-  (x >= 1000) catch {
-    print("x is too high");
-    reset_counter();
-  }
+        # Build the parser
+        self.parser = yacc.yacc(debug=True, write_tables=True)
 
-  (x >= 100) catch {
-    print("x is 100");
-    reset_counter();
-  }
-  
-  escape(1000 * 60) -> print("x never got to 100")
-"""
-
-print(parser.parse(valid_program, lexer=lexer.lexer))
-
-while True:
-   try:
-       s = input('cutec > ' )
-   except EOFError:
-       break
-   if not s: continue
-   result = parser.parse(s, lexer=lexer.lexer)
-   print(result)
+    def parse(self, cutec_code: str) -> Node | None:
+        return self.parser.parse(cutec_code, lexer=self.lexer.lexer)

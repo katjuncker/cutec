@@ -1,14 +1,21 @@
-from cutec_lexer import CuteLexer
+from cutec_bytecode.bytes import CutecBytes
+from cutec_parser import CutecParser
 
-# Build the lexer
-m = CuteLexer()
+cutec = CutecParser()
 
-m.build()
+print('CuteC> ', end=None)
+lines = []
+while True:
+    line = input('')
+    if line == "GO.":
+        break
+    lines.append(line)
 
-toks = m.lex('''
-x: Binary = mem(1024)
-keep x
-toss x
-''')
+program = '\n'.join(lines)
+ast = cutec.parse(program)
 
-print(toks)
+if ast:
+    # print(ast)
+    bytecode = CutecBytes()
+    ast.add_bytes(bytecode)
+    print(bytecode.format_bytes())

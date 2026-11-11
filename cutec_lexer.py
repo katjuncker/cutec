@@ -51,6 +51,8 @@ class CuteLexer(object):
         'MINUS',
         'TIMES',
         'DIVIDE',
+        'MOD',
+        'POW',
         'LPAREN',
         'RPAREN',
         'LBRACE',
@@ -90,6 +92,8 @@ class CuteLexer(object):
     t_MINUS   = r'-'
     t_TIMES   = r'\*'
     t_DIVIDE  = r'/'
+    t_MOD = r'\%'
+    t_POW = r'\^'
     t_LPAREN  = r'\('
     t_RPAREN  = r'\)'
     t_DOT = r'\.'
@@ -97,13 +101,13 @@ class CuteLexer(object):
     t_LTE = r'<='
     t_LT = r'<'
     t_GTE = r'>='
-    T_EQ = r'=='
-    T_NEQ = r'!='
+    t_EQ = r'=='
+    t_NEQ = r'!='
     t_GT = '>'
     t_ASSIGN = r'='
     t_EXCLAM = r'!'
-    T_DOUBLE_PIPE = r'\|\|'
-    T_PIPE = r'\|'
+    t_DOUBLE_PIPE = r'\|\|'
+    t_PIPE = r'\|'
 
     def t_ID(self, t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -112,7 +116,7 @@ class CuteLexer(object):
 
     # A regular expression rule with some action code
     def t_NUMBER(self, t):
-        r'\d+(\.\d+)?'
+        r'-?\d+(\.\d+)?'
         t.value = float(t.value)
         return t
 

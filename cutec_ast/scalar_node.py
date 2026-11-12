@@ -2,7 +2,7 @@ import struct
 from logging import warning
 
 from cutec_ast.node import Node
-from cutec_bytecode.bytes import CutecBytes, CUTEC_PUSH
+from cutec_bytecode.bytes import CutecBytes, CUTEC_PUSH, CUTEC_DATA_STR
 
 
 class ScalarNode(Node):
@@ -20,6 +20,11 @@ class ScalarNode(Node):
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
         if self.data_type == 'number':
             bytecode.add_ins_wdata(CUTEC_PUSH, str(self.value))
+        elif self.data_type == 'char':
+            bytecode.add_ins_wdata(CUTEC_PUSH, "'" + str(self.value) + "'")
+        elif self.data_type == 'string':
+            str_index = bytecode.add_data(self.value)
+            bytecode.add_ins_wdata(CUTEC_DATA_STR, str_index)
         else:
             warning(
                 'CuteC compile warning: ' + self.__class__.__name__ + ' does not implement the ' + self.data_type + ' data type.')

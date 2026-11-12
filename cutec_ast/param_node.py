@@ -1,5 +1,6 @@
 from cutec_ast.node import Node
 from cutec_ast.scalar_node import ScalarNode
+from cutec_bytecode.bytes import CutecBytes
 
 
 class ParamNode(Node):
@@ -16,3 +17,8 @@ class ParamNode(Node):
             return self.name + '=' + str(self.value)
         else:
             return self.name
+
+    def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        if self.value:
+            return self.value.add_bytes(bytecode)
+        return bytecode

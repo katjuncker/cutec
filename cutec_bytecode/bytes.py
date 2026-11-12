@@ -25,6 +25,7 @@ CUTEC_LT            = 0b11010
 CUTEC_LTE           = 0b11011
 CUTEC_NOT           = 0b11100
 CUTEC_NEQ           = 0b11101
+CUTEC_DATA_STR      = 0b11110
 
 op_codes = {
     CUTEC_JMP: ('jmp', 4),
@@ -47,15 +48,19 @@ op_codes = {
     CUTEC_GTE: ('gte', 0),
     CUTEC_LTE: ('lte', 0),
     CUTEC_NOT: ('not', 0),
-    CUTEC_NEQ: ('neq', 0)
+    CUTEC_NEQ: ('neq', 0),
+    CUTEC_DATA_STR: ('data_s', 4)
 }
 
 
 class CutecBytes:
+    label_maker = LabelMaker()
+    data = []
+    actions = []
+
     def __init__(self):
         self.instructions: list[str] = []
         self.variable_map = {}
-        self.label_maker = LabelMaker()
 
     def add(self, ins: str):
         self.instructions.append(ins)
@@ -67,6 +72,12 @@ class CutecBytes:
     def add_ins_wdata(self, ins: int, data):
         ins_text = self.get_ins_text(ins) + ' ' + str(data)
         self.add(ins_text)
+
+    def add_data(self, value) -> int:
+        if value in self.data:
+            return self.data.index(value)
+        self.data.append(value)
+        return len(self.data) - 1
 
     def add_label(self, label: str):
         self.add('')
@@ -88,5 +99,34 @@ class CutecBytes:
             raise ValueError('CuteC: No such variable ' + name)
         return name
 
-    def format_bytes(self) -> str:
-        return '\n'.join(self.instructions)
+    def register_action(self, params, bytecode: CutecBytes) -> int:
+        self.actions.append((len(self.actions), params, bytecode))
+        return len(self.actions) - 1
+
+    def format_bytes(self, level=0) -> str:
+        program = ''
+        has_data = len(self.data) > 0
+        has_actions = len(self.actions) > 0
+
+        if has_data and level == 0:
+            program += '.data\n'
+            data_index = 0
+            for d in self.data:
+                program += '  ' + str(data_index) + ': ' + d + '\n'
+                data_index += 1
+            program += '\n'
+
+        if has_actions and level == 0:
+            program += '.actions\n'
+            for action in self.actions:
+                program += '  ' + str(action[0]) + ':'
+                program += action[2].format_bytes(level + 1) + '\n'
+            program += '\n'
+
+        instructions = '\n'.join(self.instructions)
+        program += instructions
+
+        # add indents
+        program_lines = [(' ' * level * 4) + line for line in program.split('\n')]
+        return ('\n'.join(program_lines)).strip('\r\n')
+

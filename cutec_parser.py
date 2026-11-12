@@ -127,7 +127,7 @@ def p_factor_action(p):
 
 def p_factor_action_with_params(p):
     'factor :  ACTION LPAREN params RPAREN ARROW expression'
-    p[0] = ActionNode(p[5])
+    p[0] = ActionNode(p[6], p[3])
 
 def p_factor_scalar(p):
     'factor : scalar'
@@ -198,9 +198,9 @@ def p_expression_chase_no_escape(p):
     p[0] = p[1]
 
 def p_chase_with_escape(p):
-    'chase_with_escape : CHASE LPAREN catches escape RPAREN'
+    'chase_with_escape : CHASE LPAREN catches COMMA escape RPAREN'
     # Combine catches and the explicit escape clause here
-    p[0] = ChaseNode(p[3], p[4])
+    p[0] = ChaseNode(p[3], p[5])
 
 def p_chase_no_escape(p):
     'chase_no_escape : CHASE LPAREN catches RPAREN'

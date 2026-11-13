@@ -23,9 +23,13 @@ class CallNode(Node):
         return '( ' + str(self.action) + '(' + arg_str + ')' + ' )'
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        # push the action part to the stack
+        self.action.add_bytes(bytecode)
+
         for arg in self.arguments:
             # push each argument
             arg.add_bytes(bytecode)
 
         # call it!
         bytecode.add_ins_wdata(CUTEC_CALL, str(len(self.arguments)))
+        return bytecode

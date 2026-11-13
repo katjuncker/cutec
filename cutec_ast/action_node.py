@@ -2,7 +2,8 @@ from logging import warning
 
 from cutec_ast.node import Node
 from cutec_ast.param_node import ParamNode
-from cutec_bytecode.bytes import CutecBytes, CUTEC_PUSH, CUTEC_STORE, CUTEC_JMP
+from cutec_bytecode.bytes import CutecBytes, CUTEC_PUSH, CUTEC_STORE, CUTEC_JMP, CUTEC_LOAD_ACTION
+
 
 class ActionNode(Node):
     frame: Node
@@ -71,7 +72,7 @@ class ActionNode(Node):
         #todo: the () is just so we know it's a method value for printing
         #we can remove this later as the compiler will know from context that if you're
         #calling something that it must be a method value
-        bytecode.add_ins_wdata(CUTEC_PUSH, str(action_index) + '()')
+        bytecode.add_ins_wdata(CUTEC_LOAD_ACTION, str(action_index))
 
         return bytecode
 

@@ -1,0 +1,3 @@
+class CuteCompileError(Exception):
+    def __init__(self, error: str):
+        super().__init__('CuteC compile error: ' + error)

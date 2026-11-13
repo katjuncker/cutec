@@ -55,6 +55,8 @@ class ChaseNode(Node):
             catch.add_bytes(bytecode)
             bytecode.add_ins_wdata(CUTEC_JMP, label_end)
 
+            catch_index += 1
+
         # if there's an escape, we need to let you jump to it
         if self.escape:
             bytecode.add_label(label_escape)

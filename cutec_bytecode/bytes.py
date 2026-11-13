@@ -1,4 +1,7 @@
-import struct
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from cutec_bytecode.packer import CutecPacker
 
 from cutec_bytecode.label_maker import LabelMaker
 
@@ -26,6 +29,8 @@ CUTEC_LTE           = 0b11011
 CUTEC_NOT           = 0b11100
 CUTEC_NEQ           = 0b11101
 CUTEC_DATA_STR      = 0b11110
+CUTEC_CALL          = 0b11111
+CUTEC_LOAD_ACTION   = 0b100000
 
 op_codes = {
     CUTEC_JMP: ('jmp', 4),
@@ -49,7 +54,9 @@ op_codes = {
     CUTEC_LTE: ('lte', 0),
     CUTEC_NOT: ('not', 0),
     CUTEC_NEQ: ('neq', 0),
-    CUTEC_DATA_STR: ('data_s', 4)
+    CUTEC_DATA_STR: ('data_s', 4),
+    CUTEC_CALL: ('call', 1),
+    CUTEC_LOAD_ACTION: ('load_a', 4)
 }
 
 
@@ -103,25 +110,41 @@ class CutecBytes:
         self.actions.append((len(self.actions), params, bytecode))
         return len(self.actions) - 1
 
-    def format_bytes(self, level=0) -> str:
+    # Packs program into a simple binary
+    def pack_program(self, packer: CutecPacker) -> bytes:
+        return self.pack_program_str(self.format_program(), packer)
+
+    # Packs a formatted program string into a simple binary
+    def pack_program_str(self, program: str, packer: CutecPacker) -> bytes:
+        return packer.pack(program, self)
+
+
+    # Generates human readable bytecode
+    def format_program(self, level=0) -> str:
         program = ''
         has_data = len(self.data) > 0
         has_actions = len(self.actions) > 0
 
         if has_data and level == 0:
-            program += '.data\n'
+            program += '.data:\n'
             data_index = 0
             for d in self.data:
-                program += '  ' + str(data_index) + ': ' + d + '\n'
+                if '\x00' in d or '\n' in d:
+                    program += f'  {data_index},{len(d)}: {d}\n'
+                else:
+                    program += f'  {data_index}: {d}\n'
                 data_index += 1
             program += '\n'
 
         if has_actions and level == 0:
-            program += '.actions\n'
+            program += '.actions:\n'
             for action in self.actions:
-                program += '  ' + str(action[0]) + ':'
-                program += action[2].format_bytes(level + 1) + '\n'
+                program += '  ' + str(action[0]) + ':\n'
+                program += '    ' + action[2].format_program(level + 1).strip() + '\n'
             program += '\n'
+
+        if level == 0:
+            program += '.cutec:\n'
 
         instructions = '\n'.join(self.instructions)
         program += instructions

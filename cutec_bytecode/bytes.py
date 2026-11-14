@@ -1,7 +1,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from cutec_bytecode.packer import CutecPacker
+    from cutec_ast.scalar_node import ScalarNode
 
 from cutec_bytecode.label_maker import LabelMaker
 
@@ -28,7 +30,7 @@ CUTEC_LT            = 0b11010
 CUTEC_LTE           = 0b11011
 CUTEC_NOT           = 0b11100
 CUTEC_NEQ           = 0b11101
-CUTEC_DATA_STR      = 0b11110
+CUTEC_DATA          = 0b11110
 CUTEC_CALL          = 0b11111
 CUTEC_LOAD_ACTION   = 0b100000
 
@@ -54,7 +56,7 @@ op_codes = {
     CUTEC_LTE: ('lte', 0),
     CUTEC_NOT: ('not', 0),
     CUTEC_NEQ: ('neq', 0),
-    CUTEC_DATA_STR: ('data_s', 4),
+    CUTEC_DATA: ('data', 4),
     CUTEC_CALL: ('call', 1),
     CUTEC_LOAD_ACTION: ('load_a', 4)
 }
@@ -62,7 +64,7 @@ op_codes = {
 
 class CutecBytes:
     label_maker = LabelMaker()
-    data = []
+    data: list[ScalarNode] = []
     actions = []
 
     def __init__(self):
@@ -80,7 +82,7 @@ class CutecBytes:
         ins_text = self.get_ins_text(ins) + ' ' + str(data)
         self.add(ins_text)
 
-    def add_data(self, value) -> int:
+    def add_data(self, value: ScalarNode) -> int:
         if value in self.data:
             return self.data.index(value)
         self.data.append(value)
@@ -128,10 +130,9 @@ class CutecBytes:
             program += '.data:\n'
             data_index = 0
             for d in self.data:
-                if '\x00' in d or '\n' in d:
-                    program += f'  {data_index},{len(d)}: {d}\n'
-                else:
-                    program += f'  {data_index}: {d}\n'
+                data_type = d.data_type.value
+                data_value = d.format_str()
+                program += f'  {data_index}: {data_type},{data_value}\n'
                 data_index += 1
             program += '\n'
 

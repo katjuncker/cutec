@@ -1,7 +1,10 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from logging import warning
 
-from cutec_bytecode.bytes import CutecBytes
-
+if TYPE_CHECKING:
+    from cutec_bytecode.packer import CutecBytes
 
 class Node:
     def __init__(self):

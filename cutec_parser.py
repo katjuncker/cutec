@@ -11,7 +11,7 @@ from cutec_ast.chase_node import ChaseNode
 from cutec_ast.id_node import IdNode
 from cutec_ast.node import Node
 from cutec_ast.param_node import ParamNode
-from cutec_ast.scalar_node import ScalarNode
+from cutec_ast.scalar_node import ScalarNode, CutecType
 from cutec_ast.unary_op import UnaryOp
 from cutec_lexer import CuteLexer
 
@@ -135,7 +135,7 @@ def p_factor_scalar(p):
 
 def p_factor_num(p):
     'scalar : NUMBER'
-    p[0] = ScalarNode('number', p[1])
+    p[0] = ScalarNode(CutecType.Dbl, p[1])
 
 def p_factor_id(p):
     'scalar : ID'
@@ -143,11 +143,11 @@ def p_factor_id(p):
 
 def p_factor_char(p):
     'scalar : CHAR'
-    p[0] = ScalarNode('char', p[1])
+    p[0] = ScalarNode(CutecType.Char, p[1])
 
 def p_factor_string(p):
     'scalar : STRING'
-    p[0] = ScalarNode('string', p[1])
+    p[0] = ScalarNode(CutecType.Str, p[1])
 
 def p_params(p):
     'params : params COMMA param'
@@ -221,7 +221,7 @@ def p_catch(p):
 
 def p_escape(p):
     'escape : ESCAPE ARROW expression'
-    p[0] = EscapeNode(ScalarNode('number', 0), p[3])
+    p[0] = EscapeNode(ScalarNode(CutecType.Int, 0), p[3])
 
 def p_escape_timeout(p):
     'escape : ESCAPE LPAREN expression RPAREN ARROW expression'

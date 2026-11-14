@@ -1,33 +1,51 @@
-import struct
-from logging import warning
+from enum import StrEnum
 
 from cutec_ast.node import Node
-from cutec_bytecode.bytes import CutecBytes, CUTEC_PUSH, CUTEC_DATA_STR
+from cutec_bytecode.bytes import CutecBytes, CUTEC_DATA
 
+
+class CutecType (StrEnum):
+    Str = 's'
+    Int = 'i'
+    Char = 'c'
+    Dbl = 'd'
+    Obj = 'o'
+    Bool = 'b'
+    Null = 'n'
+    Action = 'a'
 
 class ScalarNode(Node):
-    data_type: str
-    value: int|float|str
+    data_type: CutecType
+    value: int|float|str|bool|None
 
-    def __init__(self, data_type: str, value: int|float|str):
+    def __init__(self, data_type: CutecType, value: int|float|str):
         self.data_type = data_type
         self.value = value
         super().__init__()
 
     def __str__(self) -> str:
-        return self.data_type + '(' + str(self.value) + ')'
+        return self.data_type.name + '(' + str(self.value) + ')'
+
+    def format_str(self) -> str:
+        str_types = [CutecType.Str, CutecType.Int, CutecType.Dbl, CutecType.Char]
+
+        if self.data_type in str_types:
+            if self.data_type == CutecType.Str:
+                return repr(self.value)[1:-1]
+            return str(self.value)
+        elif self.data_type == CutecType.Bool:
+            if self.value:
+                return 'true'
+            else:
+                return 'false'
+        elif self.data_type == CutecType.Null:
+            return 'null'
+        else:
+            raise TypeError('Invalid scalar value of type: ' + self.data_type.name)
+
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
-        if self.data_type == 'number':
-            bytecode.add_ins_wdata(CUTEC_PUSH, str(self.value))
-        elif self.data_type == 'char':
-            bytecode.add_ins_wdata(CUTEC_PUSH, str(self.value))
-        elif self.data_type == 'string':
-            str_index = bytecode.add_data(self.value)
-            bytecode.add_ins_wdata(CUTEC_DATA_STR, str_index)
-        else:
-            warning(
-                'CuteC compile warning: ' + self.__class__.__name__ + ' does not implement the ' + self.data_type + ' data type.')
-
+        str_index = bytecode.add_data(self)
+        bytecode.add_ins_wdata(CUTEC_DATA, str_index)
         return bytecode
 

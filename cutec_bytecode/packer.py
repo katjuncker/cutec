@@ -3,9 +3,10 @@ from __future__ import annotations
 import struct
 from typing import TYPE_CHECKING
 
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.cutec_compile_error import CuteCompileError
-from cutec_bytecode.bytes import CUTEC_STORE, CUTEC_LOAD, CUTEC_PUSH, CUTEC_DATA_STR, CUTEC_LOAD_ACTION, \
-    CUTEC_CALL, CUTEC_JMP_TRUTHY, CUTEC_JMP_FALSY, CUTEC_JMP, CUTEC_JMP_FALSY_POP, op_codes
+from cutec_bytecode.bytes import CUTEC_STORE, CUTEC_LOAD, CUTEC_PUSH, CUTEC_DATA, CUTEC_LOAD_ACTION, \
+        CUTEC_CALL, CUTEC_JMP_TRUTHY, CUTEC_JMP_FALSY, CUTEC_JMP, CUTEC_JMP_FALSY_POP, op_codes
 
 if TYPE_CHECKING:
     from cutec_bytecode.bytes import CutecBytes
@@ -72,28 +73,16 @@ class CutecPacker:
             # Consume indent
             program = program[2:]
 
-            index_part, sep, rest = program.partition(': ')
+            index_part, sep, program = program.partition(': ')
             if not sep:
                 break
 
-            if ',' in index_part:
-                idx_str, len_str = index_part.split(',', 1)
-                index, length = int(idx_str), int(len_str)
+            data_index = int(index_part)
+            type_str, _, program = program.partition(',')
+            data_value, _, program = program.partition('\n')
+            data_value = data_value.rstrip('\r')
 
-                # Extract the data
-                data_value = rest[:length]
-                program = rest[length:]
-
-                # Consume trailing newline
-                program = program.lstrip('\r\n')
-
-            else:
-                index = int(index_part)
-                data_value, _, program = rest.partition('\n')
-                data_value = data_value.rstrip('\r')
-
-
-            data.append((index, data_value))
+            data.append((data_index, type_str, data_value))
 
         return data, program.lstrip('\r\n')
 
@@ -154,11 +143,39 @@ class CutecPacker:
 
         for d in data:
             d_index = int(d[0])
-            d_value = str(d[1]).encode('utf-8')
-            d_len = len(d_value)
+            d_type = d[1]
+            d_value = d[2]
+
             data_bytes.extend(d_index.to_bytes(4, 'big', signed=False))
-            data_bytes.extend(d_len.to_bytes(4, 'big', signed=False))
-            data_bytes.extend(d_value)
+
+            if d_type == CutecType.Str:
+                data_bytes.extend(b's')
+                str_value = d_value.encode('utf-8')
+                d_len = len(str_value)
+                data_bytes.extend(d_len.to_bytes(4, 'big', signed=False))
+                data_bytes.extend(str_value)
+            elif d_type == CutecType.Int:
+                data_bytes.extend(b'i')
+                d_value = int(d_value)
+                data_bytes.extend(d_value.to_bytes(4, 'big', signed=False))
+            elif d_type == CutecType.Dbl:
+                data_bytes.extend(b'd')
+                d_value = float(d_value)
+                data_bytes.extend(struct.pack('>d', d_value))
+            elif d_type == CutecType.Bool:
+                data_bytes.extend(b'b')
+                if d_value == 'true':
+                    data_bytes.extend(b't')
+                else:
+                    data_bytes.extend(b'f')
+            elif d_type == CutecType.Null:
+                # no bytes for you!
+                pass
+            elif d_type == CutecType.Char:
+                data_bytes.extend(b'c')
+                data_bytes.extend(d_value.to_bytes(1, 'big', signed=False))
+            else:
+                raise ValueError('CuteC Packer: invalid type ' + d_type)
 
         return data_bytes
 
@@ -233,7 +250,7 @@ class CutecPacker:
                 # encode the data with special cases
                 var_ops = [CUTEC_STORE, CUTEC_LOAD]
                 byte_ops = [CUTEC_CALL]
-                int_ops = [CUTEC_DATA_STR, CUTEC_LOAD_ACTION]
+                int_ops = [CUTEC_DATA, CUTEC_LOAD_ACTION]
                 jmp_ops = [CUTEC_JMP, CUTEC_JMP_FALSY_POP, CUTEC_JMP_TRUTHY, CUTEC_JMP_FALSY]
 
                 if op_code in var_ops:

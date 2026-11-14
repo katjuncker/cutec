@@ -2,7 +2,7 @@ from logging import warning
 
 from cutec_ast.node import Node
 from cutec_ast.param_node import ParamNode
-from cutec_bytecode.bytes import CutecBytes, CUTEC_PUSH, CUTEC_STORE, CUTEC_JMP, CUTEC_LOAD_ACTION
+from cutec_bytecode.bytes import CutecBytes, CUTEC_STORE, CUTEC_LOAD_ACTION
 
 
 class ActionNode(Node):
@@ -37,33 +37,17 @@ class ActionNode(Node):
 
         action = CutecBytes()
         # register all of the parameters as local variables for the frame
-        for param in self.params:
+        for index, param in enumerate(self.params):
             action.register_variable(param.name)
+            # add a load/store instruction for each default argument
+            if param.value:
+                # register the constant value
+                param.add_bytes(action)
 
-        # we need a label to handle each possible parameter count variation
-        for param_count in range(len(required_params), len(self.params) + 1):
-            action.add_label('method_params_' + str(param_count))
-
-            # todo: handle this via a standard bytecode class and maybe merge them?
-            # for every parameter passed, we'll store the pushed values from calling
-            # these must be pushed in reverse order
-            for param_index in reversed(range(0, param_count)):
-                action.add_ins_wdata(CUTEC_STORE, self.params[param_index].name)
-
-            # now we need to push/store all of the default values if any are remaining
-            if param_count < len(self.params):
-                #e.g. if this is for when you pass 2 params but 3 are needed (1 default)
-                # this means that we only need to handle the 3rd default value
-                defaults = default_params[len(self.params) - param_count - 1:]
-                for default_param in defaults:
-                    default_param.value.add_bytes(action)
-                    action.add_ins_wdata(CUTEC_STORE, default_param.name)
-
-            # jump to the start of the method
-            action.add_ins_wdata(CUTEC_JMP, 'method_start')
+                # store it for the action
+                action.add_ins_wdata(CUTEC_STORE, index)
 
         # now add the method code!
-        action.add_label('method_start')
         self.frame.add_bytes(action)
 
         # register the main method code

@@ -44,7 +44,11 @@ class CutecPacker:
         # now it's time to pack everything!
         packed = self.pack_data(data)
         packed.extend(self.pack_actions(actions))
-        packed.extend(self.pack_instructions(cutec))
+
+        # write the entry code / header length
+        cutec_ins = self.pack_instructions(cutec)
+        packed.extend(len(cutec_ins).to_bytes(4, 'big', signed=False))
+        packed.extend(cutec_ins)
 
         return bytes(packed)
 
@@ -116,7 +120,7 @@ class CutecPacker:
 
             # consume indent and trailing :
             action_line = action_line[2:-1]
-            action_index = int(action_line)
+            action_index, param_len, param_len_required = [int(part) for part in action_line.split(',')]
 
             # now just parse every line that begins with 4 spaces
             lines = program.split('\n')
@@ -129,7 +133,7 @@ class CutecPacker:
                 program = program[len(line + '\n'):]
                 instructions.append(line.strip())
 
-            actions.append((action_index, instructions))
+            actions.append((action_index, param_len, param_len_required, instructions))
 
         return actions, program.lstrip('\r\n')
 
@@ -165,19 +169,31 @@ class CutecPacker:
         data_bytes.extend(data_len.to_bytes(4, 'big', signed=False))
 
         for action in actions:
+            print('packing action', action)
             action_index = int(action[0])
             data_bytes.extend(action_index.to_bytes(4, 'big', signed=False))
-            ins_bytes = self.pack_instructions(action[1])
+
+            param_len = int(action[1])
+            data_bytes.extend(param_len.to_bytes(1, 'big', signed=False))
+
+            param_len_required = int(action[2])
+            data_bytes.extend(param_len_required.to_bytes(1, 'big', signed=False))
+
+            print(action_index, param_len, param_len_required)
+
+            ins_bytes = self.pack_instructions(action[3])
+            print("packing " + str(len(ins_bytes)) + " of instructions")
             data_bytes.extend(len(ins_bytes).to_bytes(4, 'big', signed=False))
             data_bytes.extend(ins_bytes)
 
         return data_bytes
 
     def pack_instructions(self, instructions: list[str]) -> bytearray:
+        # we need to leave 4 bytes to write the length at the end
         data_bytes = bytearray()
         labels = {}
         unresolved_jumps = []
-        byte_index = 0
+        byte_index = 4
 
         variable_map = {}
         variable_count = 0
@@ -255,9 +271,6 @@ class CutecPacker:
                         data_bytes.extend(int(0).to_bytes(4, 'big', signed=False))
 
                 byte_index += data_len
-
-        print('labels', labels)
-        print('unresolved', unresolved_jumps)
 
         # now we should have all of the unresolved jump labels
         for jump, byte_index, line_no in unresolved_jumps:

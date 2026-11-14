@@ -118,7 +118,6 @@ class CutecBytes:
     def pack_program_str(self, program: str, packer: CutecPacker) -> bytes:
         return packer.pack(program, self)
 
-
     # Generates human readable bytecode
     def format_program(self, level=0) -> str:
         program = ''
@@ -139,7 +138,18 @@ class CutecBytes:
         if has_actions and level == 0:
             program += '.actions:\n'
             for action in self.actions:
-                program += '  ' + str(action[0]) + ':\n'
+                params = action[1]
+                param_len = len(params)
+                param_len_required = len([p for p in params if not p.value])
+                program += (
+                    '  '
+                    + str(action[0])
+                    + ','
+                    + str(param_len)
+                    + ','
+                    + str(param_len_required)
+                    + ':\n'
+                )
                 program += '    ' + action[2].format_program(level + 1).strip() + '\n'
             program += '\n'
 

@@ -25,7 +25,8 @@ program = """
     escape -> 0
   );
   
-  str_cmp(hello, "world");
+  y = str_cmp(hello, "world");
+  y;
 }
 """
 

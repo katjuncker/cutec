@@ -157,7 +157,7 @@ class CutecPacker:
             elif d_type == CutecType.Int:
                 data_bytes.extend(b'i')
                 d_value = int(d_value)
-                data_bytes.extend(d_value.to_bytes(4, 'big', signed=False))
+                data_bytes.extend(d_value.to_bytes(4, 'big', signed=True))
             elif d_type == CutecType.Dbl:
                 data_bytes.extend(b'd')
                 d_value = float(d_value)
@@ -210,7 +210,7 @@ class CutecPacker:
         data_bytes = bytearray()
         labels = {}
         unresolved_jumps = []
-        byte_index = 4
+        byte_index = 0
 
         variable_map = {}
         variable_count = 0
@@ -290,6 +290,8 @@ class CutecPacker:
                 byte_index += data_len
 
         # now we should have all of the unresolved jump labels
+        print('labels', labels)
+
         for jump, byte_index, line_no in unresolved_jumps:
             if jump not in labels:
                 raise CuteCompileError(
@@ -297,6 +299,7 @@ class CutecPacker:
             else:
                 # overwrite the bytecode
                 label_index = labels[jump]
+                print('overwriting label', byte_index, byte_index + 4, label_index);
                 data_bytes[byte_index:byte_index + 4] = label_index.to_bytes(
                     4, 'big', signed=False
                 )

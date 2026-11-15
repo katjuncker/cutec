@@ -1,5 +1,5 @@
 from cutec_ast.node import Node
-from cutec_bytecode.bytes import CutecBytes
+from cutec_bytecode.bytes import CutecBytes, CUTEC_POP
 
 
 class FrameNode(Node):
@@ -16,5 +16,7 @@ class FrameNode(Node):
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
         for node in self.nodes:
+            # these are statements so we express them and then pop
             node.add_bytes(bytecode)
+            bytecode.add_ins(CUTEC_POP)
         return bytecode

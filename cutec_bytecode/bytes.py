@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 
 from cutec_bytecode.label_maker import LabelMaker
 
+CUTEC_MEOW          = 0b001
 CUTEC_JMP_FALSY_POP = 0b010
 CUTEC_JMP           = 0b011
 CUTEC_POP           = 0b100
@@ -35,6 +36,7 @@ CUTEC_CALL          = 0b11111
 CUTEC_LOAD_ACTION   = 0b100000
 
 op_codes = {
+    CUTEC_MEOW: ('meow', 0),
     CUTEC_JMP: ('jmp', 4),
     CUTEC_ADD: ('add', 0),
     CUTEC_SUB: ('sub', 0),

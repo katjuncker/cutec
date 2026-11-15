@@ -9,6 +9,7 @@ from cutec_ast.escape_node import EscapeNode
 from cutec_ast.frame_node import FrameNode
 from cutec_ast.chase_node import ChaseNode
 from cutec_ast.id_node import IdNode
+from cutec_ast.meow_node import MeowNode
 from cutec_ast.node import Node
 from cutec_ast.param_node import ParamNode
 from cutec_ast.scalar_node import ScalarNode, CutecType
@@ -19,6 +20,7 @@ from cutec_lexer import CuteLexer
 tokens = CuteLexer.tokens
 
 precedence = (
+    ('left', 'MEOW'),
     ('left', 'ARROW'),  # Lowest precedence
     ('left', 'ESCAPE'),
     ('right', 'ASSIGN'),
@@ -33,8 +35,8 @@ precedence = (
 )
 
 def p_cutec(p):
-    'cutec : expression'
-    p[0] = p[1]
+    'cutec : MEOW MEOW expression'
+    p[0] = p[3]
 
 
 def p_statements_list(p):
@@ -112,6 +114,10 @@ def p_expression_or(p):
 def p_expression_not(p):
     'expression : NOT expression'
     p[0] = UnaryOp('not', p[2])
+
+def p_expression_meow(p):
+    'expression : MEOW expression'
+    p[0] = MeowNode(p[2])
 
 def p_expression_factor(p):
     'expression : factor'

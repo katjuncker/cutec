@@ -16,9 +16,6 @@ class CutecPacker:
         self.labels_map = {}
         self.label_count = 0
 
-        self.variable_map = {}
-        self.variable_count = 0
-
     def pack(self, program: str, bytecode: CutecBytes) -> bytes:
         # first thing in a program is data
         data, program = self.read_data(program, bytecode)
@@ -28,16 +25,6 @@ class CutecPacker:
 
         # read the entry point
         cutec = self.read_cutec(program, bytecode)
-
-        # debug
-        print('---data---')
-        print(data)
-
-        print('---actions---')
-        print(actions)
-
-        print('---cutec---')
-        print(cutec)
 
         if not cutec:
             raise CuteCompileError('no executable code was provided')
@@ -150,7 +137,8 @@ class CutecPacker:
 
             if d_type == CutecType.Str:
                 data_bytes.extend(b's')
-                str_value = d_value.encode('utf-8')
+                # str_value = d_value.encode('utf-8')
+                str_value = d_value.encode('utf-8').decode('unicode_escape').encode('utf-8')
                 d_len = len(str_value)
                 data_bytes.extend(d_len.to_bytes(4, 'big', signed=False))
                 data_bytes.extend(str_value)
@@ -186,7 +174,6 @@ class CutecPacker:
         data_bytes.extend(data_len.to_bytes(4, 'big', signed=False))
 
         for action in actions:
-            print('packing action', action)
             action_index = int(action[0])
             data_bytes.extend(action_index.to_bytes(4, 'big', signed=False))
 
@@ -196,10 +183,7 @@ class CutecPacker:
             param_len_required = int(action[2])
             data_bytes.extend(param_len_required.to_bytes(1, 'big', signed=False))
 
-            print(action_index, param_len, param_len_required)
-
             ins_bytes = self.pack_instructions(action[3])
-            print("packing " + str(len(ins_bytes)) + " of instructions")
             data_bytes.extend(len(ins_bytes).to_bytes(4, 'big', signed=False))
             data_bytes.extend(ins_bytes)
 
@@ -256,7 +240,7 @@ class CutecPacker:
                 if op_code in var_ops:
                     # get the variable index
 
-                    if data not in self.variable_map:
+                    if data not in variable_map:
                         if variable_count > 255:
                             raise CuteCompileError(
                                 'Variable ' + data + ' exceeds the 255 variable limit per frame [at line ' + str(line_no) + ']')
@@ -290,8 +274,6 @@ class CutecPacker:
                 byte_index += data_len
 
         # now we should have all of the unresolved jump labels
-        print('labels', labels)
-
         for jump, byte_index, line_no in unresolved_jumps:
             if jump not in labels:
                 raise CuteCompileError(
@@ -299,7 +281,6 @@ class CutecPacker:
             else:
                 # overwrite the bytecode
                 label_index = labels[jump]
-                print('overwriting label', byte_index, byte_index + 4, label_index);
                 data_bytes[byte_index:byte_index + 4] = label_index.to_bytes(
                     4, 'big', signed=False
                 )

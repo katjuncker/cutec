@@ -12,6 +12,7 @@ class CuteLexer(object):
     lexer: lex.Lexer | None = None
 
     reserved = {
+        'meow'  : 'MEOW',
         'chase' : 'CHASE',
         'catch' : 'CATCH',
         'escape' : 'ESCAPE',

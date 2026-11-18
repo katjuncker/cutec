@@ -3,7 +3,6 @@ from enum import StrEnum
 from cutec_ast.node import Node
 from cutec_bytecode.bytes import CutecBytes, CUTEC_DATA
 
-
 class CutecType (StrEnum):
     Str = 's'
     Int = 'i'
@@ -12,6 +11,7 @@ class CutecType (StrEnum):
     Obj = 'o'
     Bool = 'b'
     Action = 'a'
+    Thing = 't'
 
 class ScalarNode(Node):
     data_type: CutecType

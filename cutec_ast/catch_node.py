@@ -1,5 +1,6 @@
 from cutec_ast.frame_node import FrameNode
 from cutec_ast.node import Node
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes
 
 
@@ -19,3 +20,6 @@ class CatchNode(Node):
         # our condition is handled, we just add our frame bytes
         self.action.add_bytes(bytecode)
         return bytecode
+
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        return self.action.get_type(bytecode)

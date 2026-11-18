@@ -11,7 +11,6 @@ class CutecType (StrEnum):
     Dbl = 'd'
     Obj = 'o'
     Bool = 'b'
-    Null = 'n'
     Action = 'a'
 
 class ScalarNode(Node):
@@ -26,6 +25,9 @@ class ScalarNode(Node):
     def __str__(self) -> str:
         return self.data_type.name + '(' + str(self.value) + ')'
 
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        return self.data_type
+
     def format_str(self) -> str:
         str_types = [CutecType.Str, CutecType.Int, CutecType.Dbl, CutecType.Char]
 
@@ -38,8 +40,6 @@ class ScalarNode(Node):
                 return 'true'
             else:
                 return 'false'
-        elif self.data_type == CutecType.Null:
-            return 'null'
         else:
             raise TypeError('Invalid scalar value of type: ' + self.data_type.name)
 

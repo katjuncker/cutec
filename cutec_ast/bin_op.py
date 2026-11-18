@@ -1,6 +1,7 @@
 from logging import warning
 
 from cutec_ast.node import Node
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_ADD, CUTEC_SUB, CUTEC_MUL, CUTEC_DIV, CUTEC_MOD, CUTEC_POW, CUTEC_EQ, \
     CUTEC_NEQ, CUTEC_GT, CUTEC_LT, CUTEC_GTE, CUTEC_LTE, CUTEC_NOT, CUTEC_JMP_TRUTHY, CUTEC_POP, CUTEC_JMP_FALSY
 
@@ -79,6 +80,166 @@ class BinOp(Node):
             warning('CuteC compile warning: ' + self.__class__.__name__ + ' does not implement the ' + self.op + ' operator.')
 
         return bytecode
+
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        left_type = self.left.get_type(bytecode)
+        right_type = self.right.get_type(bytecode)
+
+        math_ops = ['+', '-', '*', '/', '%', '^']
+        logic_ops = ['==', '!=', '>', '<', '>=', '<=', 'and', 'or']
+
+        math_op_map = {
+            '+': {
+                (CutecType.Dbl, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Int): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Char): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Bool): CutecType.Dbl,
+
+                (CutecType.Int, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Int, CutecType.Int): CutecType.Int,
+                (CutecType.Int, CutecType.Char): CutecType.Int,
+                (CutecType.Int, CutecType.Bool): CutecType.Int,
+                (CutecType.Int, CutecType.Str): CutecType.Str,
+
+                (CutecType.Char, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Char, CutecType.Int): CutecType.Char,
+                (CutecType.Char, CutecType.Char): CutecType.Char,
+                (CutecType.Char, CutecType.Bool): CutecType.Char,
+                (CutecType.Char, CutecType.Str): CutecType.Str,
+
+                (CutecType.Bool, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Bool, CutecType.Int): CutecType.Int,
+                (CutecType.Bool, CutecType.Char): CutecType.Char,
+                (CutecType.Bool, CutecType.Bool): CutecType.Int,
+
+                (CutecType.Str, CutecType.Int): CutecType.Str,
+                (CutecType.Str, CutecType.Char): CutecType.Str,
+                (CutecType.Str, CutecType.Str): CutecType.Str,
+            },
+
+            '-': {
+                (CutecType.Dbl, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Int): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Char): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Bool): CutecType.Dbl,
+
+                (CutecType.Int, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Int, CutecType.Int): CutecType.Int,
+                (CutecType.Int, CutecType.Char): CutecType.Int,
+                (CutecType.Int, CutecType.Bool): CutecType.Int,
+                (CutecType.Int, CutecType.Str): CutecType.Str,
+
+                (CutecType.Char, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Char, CutecType.Int): CutecType.Char,
+                (CutecType.Char, CutecType.Char): CutecType.Char,
+                (CutecType.Char, CutecType.Bool): CutecType.Char,
+
+                (CutecType.Bool, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Bool, CutecType.Int): CutecType.Int,
+                (CutecType.Bool, CutecType.Char): CutecType.Char,
+                (CutecType.Bool, CutecType.Bool): CutecType.Int,
+
+                (CutecType.Str, CutecType.Int): CutecType.Str,
+                (CutecType.Str, CutecType.Char): CutecType.Str,
+                (CutecType.Str, CutecType.Str): CutecType.Str,
+            },
+
+            '*': {
+                (CutecType.Dbl, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Int): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Char): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Bool): CutecType.Dbl,
+
+                (CutecType.Int, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Int, CutecType.Int): CutecType.Int,
+                (CutecType.Int, CutecType.Char): CutecType.Int,
+                (CutecType.Int, CutecType.Bool): CutecType.Int,
+                (CutecType.Int, CutecType.Str): CutecType.Str,
+
+                (CutecType.Char, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Char, CutecType.Int): CutecType.Char,
+                (CutecType.Char, CutecType.Char): CutecType.Char,
+                (CutecType.Char, CutecType.Bool): CutecType.Char,
+                (CutecType.Char, CutecType.Str): CutecType.Str,
+
+                (CutecType.Bool, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Bool, CutecType.Int): CutecType.Int,
+                (CutecType.Bool, CutecType.Char): CutecType.Char,
+                (CutecType.Bool, CutecType.Bool): CutecType.Int,
+
+                (CutecType.Str, CutecType.Int): CutecType.Str,
+                (CutecType.Str, CutecType.Bool): CutecType.Str
+            },
+
+            '/': {
+                (CutecType.Dbl, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Int): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Char): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Bool): CutecType.Dbl,
+
+                (CutecType.Int, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Int, CutecType.Int): CutecType.Int,
+                (CutecType.Int, CutecType.Char): CutecType.Int,
+                (CutecType.Int, CutecType.Bool): CutecType.Int,
+
+                (CutecType.Char, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Char, CutecType.Int): CutecType.Char,
+                (CutecType.Char, CutecType.Char): CutecType.Char,
+                (CutecType.Char, CutecType.Bool): CutecType.Char,
+
+                (CutecType.Bool, CutecType.Dbl): CutecType.Dbl,
+                (CutecType.Bool, CutecType.Int): CutecType.Int,
+                (CutecType.Bool, CutecType.Char): CutecType.Int,
+                (CutecType.Bool, CutecType.Bool): CutecType.Int,
+
+                (CutecType.Str, CutecType.Int): CutecType.Str,
+                (CutecType.Str, CutecType.Char): CutecType.Str,
+                (CutecType.Str, CutecType.Str): CutecType.Str
+            },
+
+            '%': {
+                (CutecType.Dbl, CutecType.Int): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Char): CutecType.Dbl,
+
+                (CutecType.Int, CutecType.Int): CutecType.Int,
+                (CutecType.Int, CutecType.Char): CutecType.Int,
+
+                (CutecType.Char, CutecType.Int): CutecType.Char,
+                (CutecType.Char, CutecType.Char): CutecType.Char,
+
+                (CutecType.Str, CutecType.Int): CutecType.Str,
+                (CutecType.Str, CutecType.Char): CutecType.Str,
+                (CutecType.Str, CutecType.Str): CutecType.Str
+            },
+
+            '^': {
+                (CutecType.Dbl, CutecType.Int): CutecType.Dbl,
+                (CutecType.Dbl, CutecType.Char): CutecType.Dbl,
+
+                (CutecType.Int, CutecType.Int): CutecType.Int,
+                (CutecType.Int, CutecType.Char): CutecType.Int,
+
+                (CutecType.Char, CutecType.Int): CutecType.Char,
+                (CutecType.Char, CutecType.Char): CutecType.Char,
+
+                (CutecType.Bool, CutecType.Dbl): CutecType.Int,
+                (CutecType.Bool, CutecType.Int): CutecType.Int,
+                (CutecType.Bool, CutecType.Char): CutecType.Int,
+                (CutecType.Bool, CutecType.Bool): CutecType.Int
+            }
+        }
+
+        if self.op in logic_ops:
+            # you're all OK.
+            return CutecType.Bool
+        elif self.op in math_ops:
+            op_map = math_op_map[self.op]
+            key = (left_type, right_type)
+            if key not in op_map:
+                raise TypeError('Operator ' + self.op + ' is not defined for types ' + left_type.name + ' and ' + right_type.name)
+            return op_map[key]
+        else:
+            raise TypeError('Operator ' + self.op + ' is not supported.')
 
 
 

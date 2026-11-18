@@ -10,11 +10,11 @@
     load n
     data 1
     lte
-    jmp_fp kittenish_mittens_escape
+    jmp_fp purring_biscuits_escape
     data 2
-    jmp kittenish_mittens_end
+    jmp purring_biscuits_end
     
-    kittenish_mittens_escape:
+    purring_biscuits_escape:
     load n
     load self
     load n
@@ -23,9 +23,9 @@
     load self
     call 2
     add
-    jmp kittenish_mittens_end
+    jmp purring_biscuits_end
     
-    kittenish_mittens_end:
+    purring_biscuits_end:
 
 .cutec:
 data 0

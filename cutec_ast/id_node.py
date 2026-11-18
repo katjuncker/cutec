@@ -1,4 +1,5 @@
 from cutec_ast.node import Node
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_LOAD
 
 
@@ -13,9 +14,13 @@ class IdNode(Node):
         return self.name
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
-        name = bytecode.get_variable(self.name)
+        name, data_type, value = bytecode.get_variable(self.name)
         bytecode.add_ins_wdata(CUTEC_LOAD, name)
         return bytecode
+
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        name, data_type, value = bytecode.get_variable(self.name)
+        return data_type
 
 
 

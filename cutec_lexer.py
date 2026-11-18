@@ -11,6 +11,15 @@ def find_column(input, token):
 class CuteLexer(object):
     lexer: lex.Lexer | None = None
 
+    data_types = [
+        'int',
+        'float',
+        'bool',
+        'stack', # array
+        'string',
+        'char'
+    ]
+
     reserved = {
         'meow'  : 'MEOW',
         'chase' : 'CHASE',
@@ -27,6 +36,8 @@ class CuteLexer(object):
         'of': 'OF',
         'in': 'IN',
         'to': 'TO',
+        'true': 'TRUE',
+        'false': 'FALSE',
         'cast': 'CAST',
         'and': 'AND',
         'is': 'IS',

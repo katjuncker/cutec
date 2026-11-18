@@ -1,4 +1,5 @@
 from cutec_ast.node import Node
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_CALL
 from cutec_bytecode.cutec_compile_error import CuteCompileError
 
@@ -33,3 +34,7 @@ class CallNode(Node):
         # call it!
         bytecode.add_ins_wdata(CUTEC_CALL, str(len(self.arguments)))
         return bytecode
+
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        #todo: we need to lookup and see what action this is
+        return self.action.get_type(bytecode)

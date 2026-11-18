@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from cutec_bytecode.packer import CutecPacker
-    from cutec_ast.scalar_node import ScalarNode
+    from cutec_ast.scalar_node import ScalarNode, CutecType
 
 from cutec_bytecode.label_maker import LabelMaker
 
@@ -67,6 +67,7 @@ op_codes = {
 class CutecBytes:
     label_maker = LabelMaker()
     data: list[ScalarNode] = []
+    data_values = []
     actions = []
 
     def __init__(self):
@@ -85,9 +86,10 @@ class CutecBytes:
         self.add(ins_text)
 
     def add_data(self, value: ScalarNode) -> int:
-        if value in self.data:
-            return self.data.index(value)
+        if value.value in self.data_values:
+            return self.data_values.index(value)
         self.data.append(value)
+        self.data_values.append(value.value)
         return len(self.data) - 1
 
     def add_label(self, label: str):
@@ -100,15 +102,15 @@ class CutecBytes:
     def get_ins_text(self, ins: int) -> str:
         return op_codes[ins][0]
 
-    def register_variable(self, name: str):
+    def register_variable(self, name: str, type: CutecType, value: ScalarNode|None):
         if name not in self.variable_map:
-            self.variable_map[name] = True
+            self.variable_map[name] = (name, type, value)
         return name
 
-    def get_variable(self, name: str) -> str:
+    def get_variable(self, name: str):
         if name not in self.variable_map:
             raise ValueError('CuteC: No such variable ' + name)
-        return name
+        return self.variable_map[name]
 
     def register_action(self, params, bytecode: CutecBytes) -> int:
         self.actions.append((len(self.actions), params, bytecode))

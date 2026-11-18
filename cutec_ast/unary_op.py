@@ -1,6 +1,7 @@
 from logging import warning
 
 from cutec_ast.node import Node
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_NOT
 
 
@@ -23,3 +24,6 @@ class UnaryOp(Node):
         else:
             warning('CuteC compile warning: Invalid unary operator - ' + self.op)
         return bytecode
+
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        return CutecType.Bool

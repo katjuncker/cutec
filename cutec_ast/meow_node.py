@@ -1,4 +1,5 @@
 from cutec_ast.node import Node
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_MEOW
 
 class MeowNode(Node):
@@ -15,3 +16,6 @@ class MeowNode(Node):
         self.value.add_bytes(bytecode)
         bytecode.add_ins(CUTEC_MEOW)
         return bytecode
+
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        return self.value.get_type(bytecode)

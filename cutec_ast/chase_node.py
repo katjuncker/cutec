@@ -1,6 +1,7 @@
 from cutec_ast.catch_node import CatchNode
 from cutec_ast.escape_node import EscapeNode
 from cutec_ast.node import Node
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_JMP_FALSY, CUTEC_JMP, CUTEC_JMP_FALSY_POP, CUTEC_PUSH
 
 
@@ -73,3 +74,16 @@ class ChaseNode(Node):
 
         return bytecode
 
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        data_type = self.catches[0].get_type(bytecode)
+
+        values: list[Node] = self.catches.copy()
+        if self.escape:
+            values.append(self.escape)
+
+        for v in values:
+            t = v.get_type(bytecode)
+            if t != data_type:
+                raise TypeError('All catches and escapes must return ' + data_type.name + ' - found ' + t.name)
+
+        return data_type

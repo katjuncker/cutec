@@ -1,6 +1,7 @@
 from logging import warning
 
 from cutec_ast.node import Node
+from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_STORE
 
 
@@ -25,8 +26,12 @@ class AssignNode(Node):
         if self.obj:
             warning('CuteC compile warning: Object assigment not implemented')
 
-        name = bytecode.register_variable(self.name)
+        data_type = self.value.get_type(bytecode)
+        name = bytecode.register_variable(self.name, data_type, None)
         self.value.add_bytes(bytecode)
         bytecode.add_ins_wdata(CUTEC_STORE, name)
 
         return bytecode
+
+    def get_type(self, bytecode: CutecBytes) -> CutecType:
+        return self.value.get_type(bytecode)

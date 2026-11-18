@@ -156,9 +156,6 @@ class CutecPacker:
                     data_bytes.extend(b't')
                 else:
                     data_bytes.extend(b'f')
-            elif d_type == CutecType.Null:
-                # no bytes for you!
-                pass
             elif d_type == CutecType.Char:
                 data_bytes.extend(b'c')
                 data_bytes.extend(d_value.to_bytes(1, 'big', signed=False))

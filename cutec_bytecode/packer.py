@@ -158,7 +158,7 @@ class CutecPacker:
                     data_bytes.extend(b'f')
             elif d_type == CutecType.Char:
                 data_bytes.extend(b'c')
-                data_bytes.extend(d_value.to_bytes(1, 'big', signed=False))
+                data_bytes.append(ord(d_value[0]))
             else:
                 raise ValueError('CuteC Packer: invalid type ' + d_type)
 
@@ -180,21 +180,26 @@ class CutecPacker:
             param_len_required = int(action[2])
             data_bytes.extend(param_len_required.to_bytes(1, 'big', signed=False))
 
-            ins_bytes = self.pack_instructions(action[3])
+            ins_bytes = self.pack_instructions(action[3], True)
             data_bytes.extend(len(ins_bytes).to_bytes(4, 'big', signed=False))
             data_bytes.extend(ins_bytes)
 
         return data_bytes
 
-    def pack_instructions(self, instructions: list[str]) -> bytearray:
+    def pack_instructions(self, instructions: list[str], in_action = False) -> bytearray:
         # we need to leave 4 bytes to write the length at the end
         data_bytes = bytearray()
         labels = {}
         unresolved_jumps = []
         byte_index = 0
 
-        variable_map = {}
-        variable_count = 0
+
+
+        # in actions, we reserve 0 for self (eventually we'll add this too)
+        variable_count = 0 if not in_action else 1
+        variable_map = {} if not in_action else {
+            'self': 0
+        }
 
         op_code_map = {}
         for op_code in op_codes:

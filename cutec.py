@@ -10,9 +10,19 @@ cutec = CutecParser()
 program = """
 meow meow
 {
-  add_nums = action (num1/int, num2/int)/int -> {
-    return num1 + num2;
-  };
+  recursive_add = action (num/int) -> chase(
+    num == 0 -> 0,
+    escape -> self(num - 1)
+  );
+  
+  recursive_add_2 = action (num/int) -> chase(
+    num == 0 -> 0,
+    escape -> self(num - 1)
+  );
+  
+  recursive_add_2 = recursive_add;
+  
+  meow recursive_add_2(10);
 }
 """
 

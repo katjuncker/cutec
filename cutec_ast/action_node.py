@@ -4,6 +4,7 @@ from cutec_ast.node import Node
 from cutec_ast.param_node import ParamNode
 from cutec_bytecode.bytes import CutecBytes, CUTEC_STORE, CUTEC_LOAD_ACTION
 from cutec_types.actions import ActionType
+from cutec_types.placeholder_type import PlaceholderType
 from cutec_types.type_system import TypeSystem
 from cutec_types.types import Type
 
@@ -41,7 +42,12 @@ class ActionNode(Node):
         self.get_type(action)
 
         # register all of the parameters as local variables for the frame
-        for index, param in enumerate(self.params):
+
+        # this gives the 'self' variable index 0 while allowing the interpreter to specially assign it
+        params = self.params.copy()
+        params.insert(0, ParamNode('self', PlaceholderType()))
+
+        for index, param in enumerate(params):
             action.register_variable(param.name, param.value)
             # add a load/store instruction for each default argument
             if param.value:
@@ -65,6 +71,9 @@ class ActionNode(Node):
         return bytecode
 
     def get_type(self, bytecode: CutecBytes) -> Type:
+        # register the special self type
+        bytecode.type_system.register_variable('self', PlaceholderType())
+
         # register our params with the type system
         for index, param in enumerate(self.params):
             param_type = param.get_type(bytecode)
@@ -74,7 +83,10 @@ class ActionNode(Node):
         declared_return_type = self.return_type
         actual_return_type = self.frame.get_type(bytecode)
 
-        if declared_return_type and not actual_return_type.matches(declared_return_type):
+        if isinstance(actual_return_type, PlaceholderType):
+            raise TypeError('Action is purely recursive with no escape.')
+
+        if declared_return_type and not actual_return_type.type_check(declared_return_type).passes:
             raise TypeError('Actual return value of ' + str(actual_return_type) + ' does not match declared type of ' + str(declared_return_type))
 
         return_type = declared_return_type or actual_return_type
@@ -83,4 +95,12 @@ class ActionNode(Node):
         for param in self.params:
             param_types.append(param.get_type(bytecode))
 
-        return bytecode.type_system.register_action(ActionType(return_type, param_types))
+        action_type = bytecode.type_system.register_action(ActionType(return_type, param_types))
+
+        # re-register it now that we know what it really is
+        bytecode.type_system.register_variable('self', action_type)
+
+        # now check the body of the method again (should always be safe)
+        self.frame.get_type(bytecode)
+
+        return action_type

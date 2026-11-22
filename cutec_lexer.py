@@ -72,6 +72,8 @@ class CuteLexer(object):
         'COLON',
         'SEMICOLON',
         'NUMBER',
+        'FLOAT',
+        'INT',
         'TYPE',
         'PRIMITIVE',
         'ID',
@@ -147,7 +149,12 @@ class CuteLexer(object):
 
     def t_NUMBER(self, t):
         r'-?\d+(\.\d+)?'
-        t.value = float(t.value)
+        if '.' in t.value:
+            t.type = 'FLOAT'
+            t.value = float(t.value)
+        else:
+            t.type = 'INT'
+            t.value = int(t.value)
         return t
 
     def t_MULTILINE_COMMENT(self, t):

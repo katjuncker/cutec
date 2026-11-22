@@ -273,9 +273,13 @@ def p_factor_scalar(p):
     'factor : scalar'
     p[0] = p[1]
 
-def p_factor_num(p):
-    'scalar : NUMBER'
+def p_factor_float(p):
+    'scalar : FLOAT'
     p[0] = ScalarNode(CutecType.Dbl, p[1])
+
+def p_factor_int(p):
+    'scalar : INT'
+    p[0] = ScalarNode(CutecType.Int, p[1])
 
 def p_factor_id(p):
     'scalar : ID'

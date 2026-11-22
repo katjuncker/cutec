@@ -1,9 +1,10 @@
-from logging import warning
+from logging import warning, PlaceHolder
 
 from cutec_ast.node import Node
 from cutec_bytecode.bytes import CutecBytes, CUTEC_ADD, CUTEC_SUB, CUTEC_MUL, CUTEC_DIV, CUTEC_MOD, CUTEC_POW, CUTEC_EQ, \
     CUTEC_NEQ, CUTEC_GT, CUTEC_LT, CUTEC_GTE, CUTEC_LTE, CUTEC_JMP_TRUTHY, CUTEC_POP, CUTEC_JMP_FALSY
 from cutec_types.cutec_type import CutecType
+from cutec_types.placeholder_type import PlaceholderType
 from cutec_types.primitives import PrimitiveType
 from cutec_types.types import Type
 
@@ -233,6 +234,11 @@ class BinOp(Node):
             # you're all OK.
             return PrimitiveType(CutecType.Bool)
         elif self.op in math_ops:
+            # any operation on a placeholder type must be a placeholder type
+            # the above boolean logic is fine because we know it has to be boolean
+            if isinstance(left_type, PlaceholderType) or isinstance(right_type, PlaceholderType):
+                return PlaceholderType()
+
             if not isinstance(left_type, PrimitiveType):
                 raise TypeError('Use of non-primitive type with operator ' + self.op)
             if not isinstance(right_type, PrimitiveType):

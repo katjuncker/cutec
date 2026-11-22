@@ -1,17 +1,56 @@
 .data:
-  0: d,0.0
+  0: i,0
+  1: i,1
+  2: i,10
 
 .actions:
-  0,0,0:
+  0,1,1:
+    load num
     data 0
+    eq
+    jmp_fp meowy_fuzz_muffin_escape
+    data 0
+    jmp meowy_fuzz_muffin_end
+    
+    meowy_fuzz_muffin_escape:
+    load self
+    load num
+    data 1
+    sub
+    call 1
+    jmp meowy_fuzz_muffin_end
+    
+    meowy_fuzz_muffin_end:
+  1,1,1:
+    load num
+    data 0
+    eq
+    jmp_fp mewing_biscuits_escape
+    data 0
+    jmp mewing_biscuits_end
+    
+    mewing_biscuits_escape:
+    load self
+    load num
+    data 1
+    sub
+    call 1
+    jmp mewing_biscuits_end
+    
+    mewing_biscuits_end:
 
 .cutec:
 load_a 0
-store say_hi
+store recursive_add
 pop
-data 0
-store x
+load_a 1
+store recursive_add_2
 pop
-load x
+load recursive_add
+store recursive_add_2
+pop
+load recursive_add_2
+data 2
+call 1
 meow
 pop

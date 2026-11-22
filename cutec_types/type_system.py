@@ -1,4 +1,5 @@
 from cutec_types.actions import ActionType, ParamType
+from cutec_types.placeholder_type import PlaceholderType
 from cutec_types.primitives import PrimitiveType
 from cutec_types.things import ThingType
 from cutec_types.types import Type
@@ -72,7 +73,11 @@ class TypeSystem:
     def register_variable(self, name: str, data_type: Type) -> Type:
         if name in self.variables_map:
             expected_type = self.variables[self.variables_map[name]]
-            if not data_type.matches(expected_type):
+            if isinstance(expected_type, PlaceholderType):
+                self.variables[self.variables_map[name]] = data_type
+                return data_type
+
+            if not data_type.type_check(expected_type):
                 raise TypeError('Attempted to assign a value of type ' + str(data_type) + ' to variable ' + name + ' of type ' + str(expected_type))
             return data_type
 
@@ -112,8 +117,15 @@ class TypeSystem:
         :param types:
         :return:
         """
+
         if len(types) < 1:
             raise ValueError('Must be passed at least one type.')
+
+        # we exclude all of the placeholder types since that creates issues with recursion
+        types = [t for t in types if not isinstance(t, PlaceholderType)]
+        if len(types) < 1:
+            # we only got placeholder types, so we just have to return a placeholder type
+            return PlaceholderType()
 
         shared_type = types.pop()
         while len(types) != 0:

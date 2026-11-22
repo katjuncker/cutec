@@ -1,13 +1,14 @@
 #
 # The CuteC Thing Type
 #
-from cutec_types.types import Type, BaseType
+from cutec_types.base_type import BaseType
+from cutec_types.types import Type
 
 class ThingType(Type):
     def __init__(
         self,
         type_name: str,
-        parent_type: Type|None = None,
+        parent_type: ThingType|None = None,
         attribute_types: list[Type]|None = None,
         action_types: list[Type]|None = None
     ):
@@ -15,7 +16,7 @@ class ThingType(Type):
 
         self.index: int = -1
         self.type_name = type_name
-        self.parent_type: Type|None = parent_type
+        self.parent_type: ThingType|None = parent_type
 
         if attribute_types is None:
             attribute_types = []
@@ -29,14 +30,18 @@ class ThingType(Type):
         self.complete = len(action_types) > 0 or len(attribute_types) > 0
 
 
-    def matches(self, expected_type: Type | None) -> bool:
+    def matches(self, expected_type: Type | None):
         if not isinstance(expected_type, ThingType):
-            return False
+            raise TypeError('Expected a thing, got ' + str(expected_type or 'None'))
 
-        if self.parent_type:
-            return self.parent_type.matches(expected_type)
-        else:
-            return self.type_name == expected_type.type_name
+        self_type = self
+        while self_type is not None:
+            if self_type.type_name == expected_type.type_name:
+                return None
+            else:
+                self_type = self_type.parent_type
+
+        raise TypeError('Expected thing of type ' + str(expected_type) + ', got ' + str(self))
 
     def __str__(self) -> str:
         return '(thing)'

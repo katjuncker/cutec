@@ -27,6 +27,8 @@ class ActionType(Type):
         param_types: list[ParamType]|None = None
     ):
         super().__init__(BaseType.Action)
+
+        self.index: int = -1
         self.return_type: Type = return_type
 
         if param_types is None:

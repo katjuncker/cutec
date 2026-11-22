@@ -1,14 +1,13 @@
 from cutec_ast.node import Node
 from cutec_ast.scalar_node import ScalarNode
 from cutec_bytecode.bytes import CutecBytes
-
+from cutec_types.actions import ParamType
+from cutec_types.types import Type
 
 class ParamNode(Node):
-    name: str
-    value: ScalarNode|None
-
-    def __init__(self, name: str, value: ScalarNode|None=None):
+    def __init__(self, name: str, data_type: Type, value: ScalarNode|None=None):
         self.name = name
+        self.data_type = data_type
         self.value = value
         super().__init__()
 
@@ -22,3 +21,6 @@ class ParamNode(Node):
         if self.value:
             return self.value.add_bytes(bytecode)
         return bytecode
+
+    def get_type(self, bytecode: CutecBytes) -> Type:
+        return ParamType(self.data_type, not self.value)

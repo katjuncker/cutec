@@ -4,21 +4,15 @@
 
 import ply.lex as lex
 
+from cutec_types.cutec_type import CutecType
+
+
 def find_column(input, token):
     line_start = input.rfind('\n', 0, token.lexpos) + 1
     return (token.lexpos - line_start) + 1
 
 class CuteLexer(object):
     lexer: lex.Lexer | None = None
-
-    data_types = [
-        'int',
-        'float',
-        'bool',
-        'stack', # array
-        'string',
-        'char'
-    ]
 
     reserved = {
         'meow'  : 'MEOW',
@@ -30,6 +24,7 @@ class CuteLexer(object):
         'while' : 'WHILE',
         'for': 'FOR',
         'thing': 'THING',
+        'like': 'LIKE',
         'cat': 'CAT',
         'dog': 'DOG',
         'action': 'ACTION',
@@ -41,7 +36,6 @@ class CuteLexer(object):
         'cast': 'CAST',
         'and': 'AND',
         'is': 'IS',
-        'type': 'TYPE',
         'or': 'OR',
         'not': 'NOT',
         'switch': 'SWITCH',
@@ -78,6 +72,8 @@ class CuteLexer(object):
         'COLON',
         'SEMICOLON',
         'NUMBER',
+        'TYPE',
+        'PRIMITIVE',
         'ID',
         'STRING',
         'CHAR',
@@ -121,12 +117,34 @@ class CuteLexer(object):
     t_DOUBLE_PIPE = r'\|\|'
     t_PIPE = r'\|'
 
-    def t_ID(self, t):
-        r'[a-zA-Z_][a-zA-Z_0-9]*'
-        t.type = self.reserved.get(t.value,'ID')    # Check for reserved words
+    def t_TYPE(self, t):
+        r'[A-Z][a-zA-Z_0-9]*'
         return t
 
-    # A regular expression rule with some action code
+    def t_PRIMITIVE(self, t):
+        r'(int|float|bool|stack|string|bite)'
+        if t.value == 'int':
+            t.value = CutecType.Int
+        elif t.value == 'float':
+            t.value = CutecType.Dbl
+        elif t.value == 'bite':
+            t.value = CutecType.Char
+        elif t.value == 'bool':
+            t.value = CutecType.Bool
+        elif t.value == 'stack':
+            t.value = CutecType.Stack
+        elif t.value == 'string':
+            t.value = CutecType.Str
+        return t
+
+    def t_ID(self, t):
+        r'[a-z_][a-zA-Z_0-9]*'
+        if t.value in self.reserved:
+            t.type = self.reserved.get(t.value)
+        else:
+            t.type = 'ID'
+        return t
+
     def t_NUMBER(self, t):
         r'-?\d+(\.\d+)?'
         t.value = float(t.value)

@@ -3,33 +3,31 @@ from cutec_bytecode.packer import CutecPacker
 from cutec_parser import CutecParser
 import subprocess
 
+from cutec_types.type_system import TypeSystem, type_system
+
 cutec = CutecParser()
 
 program = """
 meow meow
 { 
-  meow "Hello, world!\n";
+  say_hi = action () -> 0;
 
-  recursive_add = action (n, self) -> chase(
-    n <= 0 -> 0,
-    escape -> n + self(n - 1, self)
-  );
-  
-  meow recursive_add(1000, recursive_add);
+  x/int = 0;
+  meow x;
 }
 """
 
 ast = cutec.parse(program)
 
 if ast:
-    bytecode = CutecBytes()
+    bytecode = CutecBytes(type_system)
     ast.add_bytes(bytecode)
-
-    packer = CutecPacker()
-    packed = bytecode.pack_program(packer)
 
     with open('program.cutec', 'w', encoding='utf-8') as cutec_file:
         cutec_file.write(bytecode.format_program())
+
+    packer = CutecPacker()
+    packed = bytecode.pack_program(packer)
 
     with open('program.casm', 'wb') as packed_file:
         packed_file.write(packed)

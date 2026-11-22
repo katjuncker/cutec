@@ -1,13 +1,9 @@
-from cutec_ast.frame_node import FrameNode
 from cutec_ast.node import Node
-from cutec_ast.scalar_node import CutecType
+from cutec_types.types import Type
 from cutec_bytecode.bytes import CutecBytes
 
 
 class EscapeNode(Node):
-    timeout: Node
-    value: Node
-
     def __init__(self, timeout: Node, value: Node):
         self.timeout = timeout
         self.value = value
@@ -20,5 +16,5 @@ class EscapeNode(Node):
         self.value.add_bytes(bytecode)
         return bytecode
 
-    def get_type(self, bytecode: CutecBytes) -> CutecType:
+    def get_type(self, bytecode: CutecBytes) -> Type:
         return self.value.get_type(bytecode)

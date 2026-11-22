@@ -1,4 +1,4 @@
-from cutec_ast.scalar_node import CutecType
+from cutec_types.cutec_type import CutecType
 from cutec_types.types import Type, BaseType
 
 

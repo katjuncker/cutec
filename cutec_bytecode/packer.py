@@ -3,10 +3,10 @@ from __future__ import annotations
 import struct
 from typing import TYPE_CHECKING
 
-from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.cutec_compile_error import CuteCompileError
 from cutec_bytecode.bytes import CUTEC_STORE, CUTEC_LOAD, CUTEC_PUSH, CUTEC_DATA, CUTEC_LOAD_ACTION, \
         CUTEC_CALL, CUTEC_JMP_TRUTHY, CUTEC_JMP_FALSY, CUTEC_JMP, CUTEC_JMP_FALSY_POP, op_codes
+from cutec_types.cutec_type import CutecType
 
 if TYPE_CHECKING:
     from cutec_bytecode.bytes import CutecBytes

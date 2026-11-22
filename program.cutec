@@ -1,42 +1,17 @@
 .data:
-  0: s,Hello, world!\n
-  1: d,0.0
-  2: d,0.0
-  3: d,1.0
-  4: d,1000.0
+  0: d,0.0
 
 .actions:
-  0,2,2:
-    load n
-    data 1
-    lte
-    jmp_fp purring_biscuits_escape
-    data 2
-    jmp purring_biscuits_end
-    
-    purring_biscuits_escape:
-    load n
-    load self
-    load n
-    data 3
-    sub
-    load self
-    call 2
-    add
-    jmp purring_biscuits_end
-    
-    purring_biscuits_end:
+  0,0,0:
+    data 0
 
 .cutec:
-data 0
-meow
-pop
 load_a 0
-store recursive_add
+store say_hi
 pop
-load recursive_add
-data 4
-load recursive_add
-call 2
+data 0
+store x
+pop
+load x
 meow
 pop

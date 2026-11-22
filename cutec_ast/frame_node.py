@@ -1,11 +1,9 @@
 from cutec_ast.node import Node
-from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_POP
+from cutec_types.types import Type
 
 
 class FrameNode(Node):
-    nodes: list[Node]
-
     def __init__(self, nodes=None):
         if nodes is None:
             nodes = []
@@ -22,5 +20,9 @@ class FrameNode(Node):
             bytecode.add_ins(CUTEC_POP)
         return bytecode
 
-    def get_type(self, bytecode: CutecBytes) -> CutecType:
-        return self.nodes[-1].get_type(bytecode)
+    def get_type(self, bytecode: CutecBytes) -> Type:
+        return_types = bytecode.type_system.return_types
+        if len(return_types) > 0:
+            return bytecode.type_system.get_shared_type(return_types)
+        else:
+            return self.nodes[-1].get_type(bytecode)

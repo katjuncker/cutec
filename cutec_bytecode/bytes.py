@@ -1,12 +1,16 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
+from cutec_ast.node import Node
+from cutec_types.type_system import TypeSystem
 
 if TYPE_CHECKING:
     from cutec_bytecode.packer import CutecPacker
-    from cutec_ast.scalar_node import ScalarNode, CutecType
+    from cutec_ast.scalar_node import ScalarNode
 
 from cutec_bytecode.label_maker import LabelMaker
 
+CUTEC_RETURN        = 0b0
 CUTEC_MEOW          = 0b001
 CUTEC_JMP_FALSY_POP = 0b010
 CUTEC_JMP           = 0b011
@@ -70,9 +74,14 @@ class CutecBytes:
     data_values = []
     actions = []
 
-    def __init__(self):
+    def __init__(self, type_system: TypeSystem):
+        # the instructions for this frame
         self.instructions: list[str] = []
+
+        # keeps track of all variables declared in this frame
         self.variable_map = {}
+
+        self.type_system: TypeSystem = type_system
 
     def add(self, ins: str):
         self.instructions.append(ins)
@@ -85,9 +94,9 @@ class CutecBytes:
         ins_text = self.get_ins_text(ins) + ' ' + str(data)
         self.add(ins_text)
 
-    def add_data(self, value: ScalarNode) -> int:
+    def add_data(self, value: Any) -> int:
         if value.value in self.data_values:
-            return self.data_values.index(value)
+            return self.data_values.index(value.value)
         self.data.append(value)
         self.data_values.append(value.value)
         return len(self.data) - 1
@@ -102,12 +111,12 @@ class CutecBytes:
     def get_ins_text(self, ins: int) -> str:
         return op_codes[ins][0]
 
-    def register_variable(self, name: str, type: CutecType, value: ScalarNode|None):
+    def register_variable(self, name: str, value: Node|None):
         if name not in self.variable_map:
-            self.variable_map[name] = (name, type, value)
+            self.variable_map[name] = (name, value)
         return name
 
-    def get_variable(self, name: str):
+    def get_variable(self, name: str) -> tuple[str, Node|None]:
         if name not in self.variable_map:
             raise ValueError('CuteC: No such variable ' + name)
         return self.variable_map[name]

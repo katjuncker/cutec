@@ -1,16 +1,14 @@
 from logging import warning
 
 from cutec_ast.node import Node
-from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_ADD, CUTEC_SUB, CUTEC_MUL, CUTEC_DIV, CUTEC_MOD, CUTEC_POW, CUTEC_EQ, \
-    CUTEC_NEQ, CUTEC_GT, CUTEC_LT, CUTEC_GTE, CUTEC_LTE, CUTEC_NOT, CUTEC_JMP_TRUTHY, CUTEC_POP, CUTEC_JMP_FALSY
+    CUTEC_NEQ, CUTEC_GT, CUTEC_LT, CUTEC_GTE, CUTEC_LTE, CUTEC_JMP_TRUTHY, CUTEC_POP, CUTEC_JMP_FALSY
+from cutec_types.cutec_type import CutecType
+from cutec_types.primitives import PrimitiveType
+from cutec_types.types import Type
 
 
 class BinOp(Node):
-    left: Node
-    right: Node
-    op: str
-
     def __init__(self, op: str, left: Node, right: Node):
         self.op = op
         self.left = left
@@ -81,7 +79,7 @@ class BinOp(Node):
 
         return bytecode
 
-    def get_type(self, bytecode: CutecBytes) -> CutecType:
+    def get_type(self, bytecode: CutecBytes) -> Type:
         left_type = self.left.get_type(bytecode)
         right_type = self.right.get_type(bytecode)
 
@@ -231,13 +229,18 @@ class BinOp(Node):
 
         if self.op in logic_ops:
             # you're all OK.
-            return CutecType.Bool
+            return PrimitiveType(CutecType.Bool)
         elif self.op in math_ops:
+            if not isinstance(left_type, PrimitiveType):
+                raise TypeError('Use of non-primitive type with operator ' + self.op)
+            if not isinstance(right_type, PrimitiveType):
+                raise TypeError('Use of non-primitive type with operator ' + self.op)
+
             op_map = math_op_map[self.op]
             key = (left_type, right_type)
             if key not in op_map:
-                raise TypeError('Operator ' + self.op + ' is not defined for types ' + left_type.name + ' and ' + right_type.name)
-            return op_map[key]
+                raise TypeError('Operator ' + self.op + ' is not defined for types ' + left_type.primitive_type.name + ' and ' + right_type.primitive_type.name)
+            return PrimitiveType(op_map[key])
         else:
             raise TypeError('Operator ' + self.op + ' is not supported.')
 

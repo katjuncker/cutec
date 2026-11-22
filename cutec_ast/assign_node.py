@@ -1,15 +1,11 @@
 from logging import warning
 
 from cutec_ast.node import Node
-from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_STORE
+from cutec_types.types import Type
 
 
 class AssignNode(Node):
-    obj: Node|None
-    name: str
-    value: Node
-
     def __init__(self, name: str, value: Node, obj: Node|None = None):
         self.name = name
         self.value = value
@@ -25,13 +21,15 @@ class AssignNode(Node):
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
         if self.obj:
             warning('CuteC compile warning: Object assigment not implemented')
-
-        data_type = self.value.get_type(bytecode)
-        name = bytecode.register_variable(self.name, data_type, None)
+        name = bytecode.register_variable(self.name, self.value)
         self.value.add_bytes(bytecode)
         bytecode.add_ins_wdata(CUTEC_STORE, name)
 
         return bytecode
 
-    def get_type(self, bytecode: CutecBytes) -> CutecType:
-        return self.value.get_type(bytecode)
+    def get_type(self, bytecode: CutecBytes) -> Type:
+        data_type = self.value.get_type(bytecode)
+
+        # if we haven't seen the variable before, we'll register it
+        # otherwise, we'll do nothing except verify that the value type is OK
+        return bytecode.type_system.register_variable(self.name, data_type)

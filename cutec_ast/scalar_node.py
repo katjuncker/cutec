@@ -2,22 +2,12 @@ from enum import StrEnum
 
 from cutec_ast.node import Node
 from cutec_bytecode.bytes import CutecBytes, CUTEC_DATA
-
-class CutecType (StrEnum):
-    Str = 's'
-    Int = 'i'
-    Char = 'c'
-    Dbl = 'd'
-    Obj = 'o'
-    Bool = 'b'
-    Action = 'a'
-    Thing = 't'
+from cutec_types.cutec_type import CutecType
+from cutec_types.primitives import PrimitiveType
+from cutec_types.types import Type
 
 class ScalarNode(Node):
-    data_type: CutecType
-    value: int|float|str|bool|None
-
-    def __init__(self, data_type: CutecType, value: int|float|str):
+    def __init__(self, data_type: CutecType, value: int|float|str|bool|None):
         self.data_type = data_type
         self.value = value
         super().__init__()
@@ -25,8 +15,8 @@ class ScalarNode(Node):
     def __str__(self) -> str:
         return self.data_type.name + '(' + str(self.value) + ')'
 
-    def get_type(self, bytecode: CutecBytes) -> CutecType:
-        return self.data_type
+    def get_type(self, bytecode: CutecBytes) -> Type:
+        return PrimitiveType(self.data_type)
 
     def format_str(self) -> str:
         str_types = [CutecType.Str, CutecType.Int, CutecType.Dbl, CutecType.Char]
@@ -48,4 +38,3 @@ class ScalarNode(Node):
         str_index = bytecode.add_data(self)
         bytecode.add_ins_wdata(CUTEC_DATA, str_index)
         return bytecode
-

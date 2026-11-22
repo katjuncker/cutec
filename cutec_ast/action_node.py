@@ -2,19 +2,20 @@ from logging import warning
 
 from cutec_ast.node import Node
 from cutec_ast.param_node import ParamNode
-from cutec_ast.scalar_node import CutecType
 from cutec_bytecode.bytes import CutecBytes, CUTEC_STORE, CUTEC_LOAD_ACTION
+from cutec_types.actions import ActionType
+from cutec_types.type_system import TypeSystem
+from cutec_types.types import Type
 
 
 class ActionNode(Node):
-    frame: Node
-    params: list[ParamNode]
 
-    def __init__(self, frame: Node, params: list[ParamNode]|None = None):
+    def __init__(self, frame: Node, params: list[ParamNode]|None = None, return_type: Type|None = None):
         if params is None:
             params = []
-        self.params = params
+        self.params: list[ParamNode] = params
         self.frame = frame
+        self.return_type = return_type
         super().__init__()
 
     def __str__(self) -> str:
@@ -36,10 +37,10 @@ class ActionNode(Node):
                 if len(default_params) > 0:
                     warning('CuteC compile warning: Parameter with default value cannot precede parameter without one.')
 
-        action = CutecBytes()
+        action = CutecBytes(TypeSystem())
         # register all of the parameters as local variables for the frame
         for index, param in enumerate(self.params):
-            action.register_variable(param.name)
+            action.register_variable(param.name, param.value)
             # add a load/store instruction for each default argument
             if param.value:
                 # register the constant value
@@ -61,6 +62,18 @@ class ActionNode(Node):
 
         return bytecode
 
-    def get_type(self, bytecode: CutecBytes) -> CutecType:
-        # todo: need to figure out the object/action typing system for complex types
-        return CutecType.Action
+    def get_type(self, bytecode: CutecBytes) -> Type:
+        # get the type of the action body
+        declared_return_type = self.return_type
+        actual_return_type = self.frame.get_type(bytecode)
+
+        if declared_return_type and not actual_return_type.matches(declared_return_type):
+            raise TypeError('Actual return value of ' + str(actual_return_type) + ' does not match declared type of ' + str(declared_return_type))
+
+        return_type = declared_return_type or actual_return_type
+
+        param_types = []
+        for param in self.params:
+            param_types.append(param.get_type(bytecode))
+
+        return bytecode.type_system.register_action(ActionType(return_type, param_types))

@@ -19,6 +19,8 @@ class AssignNode(Node):
             return self.name + ' = ' + str(self.value)
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         if self.obj:
             warning('CuteC compile warning: Object assigment not implemented')
         name = bytecode.register_variable(self.name, self.value)

@@ -19,6 +19,8 @@ class BinOp(Node):
         return '(' + str(self.left) + ' ' + self.op + ' ' + str(self.right) + ')'
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         bin_op_map = {
             '+': CUTEC_ADD,
             '-': CUTEC_SUB,
@@ -237,7 +239,7 @@ class BinOp(Node):
                 raise TypeError('Use of non-primitive type with operator ' + self.op)
 
             op_map = math_op_map[self.op]
-            key = (left_type, right_type)
+            key = (left_type.primitive_type, right_type.primitive_type)
             if key not in op_map:
                 raise TypeError('Operator ' + self.op + ' is not defined for types ' + left_type.primitive_type.name + ' and ' + right_type.primitive_type.name)
             return PrimitiveType(op_map[key])

@@ -12,6 +12,8 @@ class MeowNode(Node):
         return '( meow ' + str(self.value) + ' )'
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         self.value.add_bytes(bytecode)
         bytecode.add_ins(CUTEC_MEOW)
         return bytecode

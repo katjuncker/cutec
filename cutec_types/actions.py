@@ -19,6 +19,12 @@ class ParamType(Type):
         else:
             return self.param_type.matches(expected_type)
 
+    def is_primitive(self):
+        return self.param_type.is_primitive()
+
+    def __str__(self) -> str:
+        return str(self.param_type)
+
 
 class ActionType(Type):
     def __init__(
@@ -37,10 +43,12 @@ class ActionType(Type):
 
     def matches(self, expected_type: Type|None) -> bool:
         if not isinstance(expected_type, ActionType):
+            raise TypeError('Expected type action, got ' + str(expected_type or 'None'))
             return False
 
         # you can't ever pass too many params
         if len(self.param_types) > len(expected_type.param_types):
+            raise TypeError('Expected ' + str(len(expected_type.param_types)) + ', got ' + str(len(self.param_types)))
             return False
 
         # make sure that every expected type is either optional or has a valid passed type
@@ -54,5 +62,11 @@ class ActionType(Type):
                 return False
 
         return True
+
+    def __str__(self) -> str:
+        return_type = str(self.return_type)
+        param_types = [str(pt) for pt in self.param_types]
+
+        return '(' + ', '.join(param_types) + ') / ' + str(return_type)
 
 

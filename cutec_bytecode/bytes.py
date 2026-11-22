@@ -40,6 +40,7 @@ CUTEC_CALL          = 0b11111
 CUTEC_LOAD_ACTION   = 0b100000
 
 op_codes = {
+    CUTEC_RETURN: ('return', 0),
     CUTEC_MEOW: ('meow', 0),
     CUTEC_JMP: ('jmp', 4),
     CUTEC_ADD: ('add', 0),

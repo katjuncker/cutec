@@ -38,6 +38,8 @@ class ActionNode(Node):
                     warning('CuteC compile warning: Parameter with default value cannot precede parameter without one.')
 
         action = CutecBytes(TypeSystem())
+        self.get_type(action)
+
         # register all of the parameters as local variables for the frame
         for index, param in enumerate(self.params):
             action.register_variable(param.name, param.value)
@@ -63,6 +65,11 @@ class ActionNode(Node):
         return bytecode
 
     def get_type(self, bytecode: CutecBytes) -> Type:
+        # register our params with the type system
+        for index, param in enumerate(self.params):
+            param_type = param.get_type(bytecode)
+            bytecode.type_system.register_variable(param.name, param_type.param_type)
+
         # get the type of the action body
         declared_return_type = self.return_type
         actual_return_type = self.frame.get_type(bytecode)

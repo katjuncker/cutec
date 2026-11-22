@@ -19,6 +19,8 @@ class ChaseNode(Node):
             return 'chase\n' + catches_str
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         label = bytecode.make_label()
         label_end = label + '_end'
         label_escape = label + '_escape'
@@ -72,8 +74,6 @@ class ChaseNode(Node):
         return bytecode
 
     def get_type(self, bytecode: CutecBytes) -> Type:
-        data_type = self.catches[0].get_type(bytecode)
-
         values: list[Node] = self.catches.copy()
         if self.escape:
             values.append(self.escape)

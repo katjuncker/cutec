@@ -9,11 +9,10 @@ cutec = CutecParser()
 
 program = """
 meow meow
-{ 
-  say_hi = action () -> 0;
-
-  x/int = 0;
-  meow x;
+{
+  add_nums = action (num1/int, num2/int)/int -> {
+    return num1 + num2;
+  };
 }
 """
 

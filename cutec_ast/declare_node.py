@@ -20,6 +20,8 @@ class DeclareNode(Node):
             return self.name + '/' + type_name + ' = ' + str(value)
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         # we aren't going to register variables unless they have a value
         # the type system will still know about them and not have any issues with them
         # but this prevents us from generating bytecode for a variable that has never been assigned a value

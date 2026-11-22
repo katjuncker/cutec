@@ -12,6 +12,8 @@ class IdNode(Node):
         return self.name
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         name, value = bytecode.get_variable(self.name)
         bytecode.add_ins_wdata(CUTEC_LOAD, name)
         return bytecode

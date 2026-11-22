@@ -18,6 +18,8 @@ class ParamNode(Node):
             return self.name
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         if self.value:
             return self.value.add_bytes(bytecode)
         return bytecode

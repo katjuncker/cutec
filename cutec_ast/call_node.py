@@ -22,6 +22,8 @@ class CallNode(Node):
         return '( ' + str(self.action) + '(' + arg_str + ')' + ' )'
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         # push the action part to the stack
         self.action.add_bytes(bytecode)
 

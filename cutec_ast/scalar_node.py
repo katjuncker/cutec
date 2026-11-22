@@ -35,6 +35,8 @@ class ScalarNode(Node):
 
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         str_index = bytecode.add_data(self)
         bytecode.add_ins_wdata(CUTEC_DATA, str_index)
         return bytecode

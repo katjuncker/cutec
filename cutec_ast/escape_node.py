@@ -13,6 +13,8 @@ class EscapeNode(Node):
         return 'escape (' + str(self.timeout) + ')' + ' {\n'+ str(self.action) + '}'
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         self.value.add_bytes(bytecode)
         return bytecode
 

@@ -14,6 +14,8 @@ class CatchNode(Node):
         return '(' + str(self.condition) + ') ' + str(self.action)
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         # our condition is handled, we just add our frame bytes
         self.action.add_bytes(bytecode)
         return bytecode

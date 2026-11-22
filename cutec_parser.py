@@ -13,6 +13,7 @@ from cutec_ast.id_node import IdNode
 from cutec_ast.meow_node import MeowNode
 from cutec_ast.node import Node
 from cutec_ast.param_node import ParamNode
+from cutec_ast.return_node import ReturnNode
 from cutec_ast.scalar_node import ScalarNode
 from cutec_ast.thing_node import ThingNode
 from cutec_ast.unary_op import UnaryOp
@@ -26,6 +27,7 @@ from cutec_types.type_system import type_system
 tokens = CuteLexer.tokens
 
 precedence = (
+    ('left', 'RETURN'),
     ('left', 'MEOW'),
     ('left', 'ESCAPE'),
     ('right', 'ASSIGN'),
@@ -95,6 +97,10 @@ z = (1, 2, and 3)
 def p_statement(p):
     'statement : expression SEMICOLON'
     p[0] = p[1]
+
+def p_statement_return(p):
+    'statement : RETURN expression SEMICOLON'
+    p[0] = ReturnNode(p[2])
 
 def p_expression_plus(p):
     'expression : expression PLUS expression'
@@ -256,7 +262,7 @@ def p_typed(p):
 
 def p_simple_typed(p):
     'simple_type : PRIMITIVE'
-    p[0] = PrimitiveType(p[1].value)
+    p[0] = PrimitiveType(CutecType(p[1].value))
 
 def p_thing_type(p):
     'simple_type : TYPE'

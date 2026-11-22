@@ -32,3 +32,6 @@ class Type:
 
     def __str__(self) -> str:
         return 'type-undefined'
+
+    def is_primitive(self):
+        return False

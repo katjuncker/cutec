@@ -16,6 +16,8 @@ class ThingNode(Node):
         return '(thing)'
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         return bytecode
 
     def get_type(self, bytecode: CutecBytes) -> Type:

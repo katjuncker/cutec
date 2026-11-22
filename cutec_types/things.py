@@ -37,3 +37,6 @@ class ThingType(Type):
             return self.parent_type.matches(expected_type)
         else:
             return self.type_name == expected_type.type_name
+
+    def __str__(self) -> str:
+        return '(thing)'

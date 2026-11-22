@@ -20,6 +20,8 @@ class UnaryOp(Node):
         return '(' + self.op + ' ' + str(self.right) + ')'
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         if self.op == 'not':
             self.right.add_bytes(bytecode)
             bytecode.add_ins(CUTEC_NOT)

@@ -1,4 +1,5 @@
 from cutec_ast.node import Node
+from cutec_ast.return_node import ReturnNode
 from cutec_bytecode.bytes import CutecBytes, CUTEC_POP
 from cutec_types.types import Type
 
@@ -14,15 +15,22 @@ class FrameNode(Node):
         return '{\n' + ''.join(['\t' + str(n) + '\n' for n in self.nodes]) + '}'
 
     def add_bytes(self, bytecode: CutecBytes) -> CutecBytes:
+        self.get_type(bytecode)  # todo: testing
+
         for node in self.nodes:
             # these are statements so we express them and then pop
             node.add_bytes(bytecode)
-            bytecode.add_ins(CUTEC_POP)
+
+            if not isinstance(node, ReturnNode):
+                bytecode.add_ins(CUTEC_POP)
         return bytecode
 
     def get_type(self, bytecode: CutecBytes) -> Type:
+        # evaluate all of the types
+        types = [n.get_type(bytecode) for n in self.nodes]
+
         return_types = bytecode.type_system.return_types
         if len(return_types) > 0:
             return bytecode.type_system.get_shared_type(return_types)
         else:
-            return self.nodes[-1].get_type(bytecode)
+            return types[-1]
